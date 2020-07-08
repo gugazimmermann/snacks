@@ -1,0 +1,54 @@
+{
+    "identityPoolName": "snacksapp65aaf4c6_identitypool_65aaf4c6",
+    "allowUnauthenticatedIdentities": false,
+    "resourceNameTruncated": "snacks65aaf4c6",
+    "userPoolName": "snacksapp65aaf4c6_userpool_65aaf4c6",
+    "autoVerifiedAttributes": [
+        "email"
+    ],
+    "mfaConfiguration": "OFF",
+    "mfaTypes": [
+        "SMS Text Message"
+    ],
+    "smsAuthenticationMessage": "Your authentication code is {####}",
+    "smsVerificationMessage": "Your verification code is {####}",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": false,
+    "passwordPolicyMinLength": 8,
+    "passwordPolicyCharacters": [],
+    "requiredAttributes": [
+        "email"
+    ],
+    "userpoolClientGenerateSecret": true,
+    "userpoolClientRefreshTokenValidity": 30,
+    "userpoolClientWriteAttributes": [
+        "email"
+    ],
+    "userpoolClientReadAttributes": [
+        "email"
+    ],
+    "userpoolClientLambdaRole": "snacks65aaf4c6_userpoolclient_lambda_role",
+    "userpoolClientSetAttributes": false,
+    "sharedId": "65aaf4c6",
+    "resourceName": "snacksapp65aaf4c6",
+    "authSelections": "identityPoolAndUserPool",
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    },
+    "unauthRoleArn": {
+        "Fn::GetAtt": [
+            "UnauthRole",
+            "Arn"
+        ]
+    },
+    "useDefault": "default",
+    "usernameAttributes": [
+        "email"
+    ],
+    "userPoolGroupList": [],
+    "dependsOn": []
+}
