@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
 import { statusBarHeight } from 'expo-constants';
 import {
-  useTheme, Colors, Card, TextInput, Button,
+  useTheme, Colors, Card, TextInput, Button, Text, Paragraph, Dialog, Portal,
 } from 'react-native-paper';
 import {
   KeyboardAvoidingView, StyleSheet, Image, View,
@@ -13,6 +13,13 @@ function Login({ navigation }) {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+
+  const [emailError, setEmailError] = useState(false);
+  const [passwordError, setPasswordError] = useState(false);
+  const [visible, setVisible] = React.useState(false);
+  const [errMsg, setErrMsg] = React.useState('');
+  const showDialog = () => setVisible(true);
+  const hideDialog = () => setVisible(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -32,7 +39,6 @@ function Login({ navigation }) {
     },
     textImput: {
       marginBottom: 8,
-      backgroundColor: 'white',
     },
     button: {
       width: '100%',
@@ -50,9 +56,15 @@ function Login({ navigation }) {
   });
 
   async function handleSignIn() {
+    if (!email) setEmailError(true);
+    if (!password) setPasswordError(true);
+    if (!email || !password) return;
     try {
       await Auth.signIn(email, password);
-    } catch (err) { console.log({ err }); }
+    } catch (err) {
+      setErrMsg(err.message);
+      showDialog();
+    }
   }
 
   return (
@@ -66,17 +78,25 @@ function Login({ navigation }) {
       <Card>
         <Card.Content>
           <TextInput
+            error={emailError}
+            theme={theme}
             label="Email"
+            placeholder="Email"
             textContentType="emailAddress"
             keyboardType="email-address"
             value={email}
+            onFocus={() => setEmailError(false)}
             onChangeText={(e) => setEmail(e)}
             style={styles.textImput}
           />
           <TextInput
+            error={passwordError}
+            theme={theme}
             label="Password"
+            placeholder="Password"
             textContentType="password"
             value={password}
+            onFocus={() => setPasswordError(false)}
             onChangeText={(p) => setPassword(p)}
             style={styles.textImput}
           />
@@ -89,6 +109,9 @@ function Login({ navigation }) {
           >
             Sign In
           </Button>
+        </Card.Actions>
+        <Card.Actions>
+          <Text>Forgot Password?</Text>
         </Card.Actions>
       </Card>
       <View>
@@ -117,6 +140,17 @@ function Login({ navigation }) {
       >
         Sign Up
       </Button>
+      <Portal>
+        <Dialog visible={visible} onDismiss={hideDialog} theme={theme}>
+          <Dialog.Title>Login Error</Dialog.Title>
+          <Dialog.Content>
+            <Paragraph>{errMsg}</Paragraph>
+          </Dialog.Content>
+          <Dialog.Actions>
+            <Button onPress={hideDialog}>Ok</Button>
+          </Dialog.Actions>
+        </Dialog>
+      </Portal>
     </KeyboardAvoidingView>
   );
 }

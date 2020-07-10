@@ -11,7 +11,6 @@ import {
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { I18nManager } from 'react-native';
 import { Updates } from 'expo';
-import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useColorScheme } from 'react-native-appearance';
@@ -47,30 +46,9 @@ const MainNavigation = () => {
       console.log(JSON.stringify(currentUser));
     } catch (err) {
       setUser(null);
-      console.log('user is not signed in');
     }
     setAuthInit(false);
   }
-
-  async function signOut() {
-    try {
-      setAuthInit(true);
-      await Auth.signOut();
-      setAuthInit(false);
-      setUser(null);
-    } catch (err) {
-      console.log('error signing out: ', err);
-    }
-  }
-
-  async function forceUser() {
-    setUser({
-      name: 'Guga Zimmermann',
-      avatar: 'https://lh3.googleusercontent.com/a-/AOh14GgvQvuJCJ30XDCK6je71lfMz-1qpj4tj-vLHzy4CA=s96-c-rg-br100',
-    });
-    await SplashScreen.hideAsync();
-    setAuthInit(false);
-  };
 
   const setStorageTheme = async (t) => {
     try {
@@ -163,15 +141,16 @@ const MainNavigation = () => {
   }
 
   useEffect(() => {
-    // checkAuth();
-    forceUser();
+    checkAuth();
     getStorageTheme().then((t) => setTheme(t));
     Hub.listen('auth', (data) => {
       const { payload } = data;
       console.log('A new auth event has happened: ', data);
       if (payload.event === 'signOut') {
-        console.log('a user has signed out!');
-        signOut();
+        setAuthInit(false);
+        setUser(null);
+      } else if (payload.event === 'signIn') {
+        checkAuth();
       }
     });
   }, []);
