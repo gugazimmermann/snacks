@@ -8,8 +8,10 @@
     "eject": "expo eject"
   },
   "dependencies": {
+    "@aws-amplify/datastore": "^2.2.5",
     "@expo-google-fonts/ubuntu": "^0.1.0",
     "@expo/vector-icons": "^10.0.0",
+    "@react-native-community/async-storage": "~1.11.0",
     "@react-native-community/masked-view": "0.1.10",
     "@react-native-community/netinfo": "5.9.2",
     "@react-navigation/drawer": "^5.8.4",
@@ -37,8 +39,7 @@
     "react-native-safe-area-context": "~3.0.7",
     "react-native-screens": "~2.9.0",
     "react-native-tab-view": "^2.14.4",
-    "react-native-web": "~0.11.7",
-    "@react-native-community/async-storage": "~1.11.0"
+    "react-native-web": "~0.11.7"
   },
   "devDependencies": {
     "@babel/core": "^7.8.6",

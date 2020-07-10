@@ -11,6 +11,7 @@ import {
 import { DefaultTheme, DarkTheme } from '@react-navigation/native';
 import { I18nManager } from 'react-native';
 import { Updates } from 'expo';
+import * as SplashScreen from 'expo-splash-screen';
 import { StatusBar } from 'expo-status-bar';
 import AsyncStorage from '@react-native-community/async-storage';
 import { useColorScheme } from 'react-native-appearance';
@@ -62,11 +63,12 @@ const MainNavigation = () => {
     }
   }
 
-  const forceUser = () => {
+  async function forceUser() {
     setUser({
       name: 'Guga Zimmermann',
       avatar: 'https://lh3.googleusercontent.com/a-/AOh14GgvQvuJCJ30XDCK6je71lfMz-1qpj4tj-vLHzy4CA=s96-c-rg-br100',
     });
+    await SplashScreen.hideAsync();
     setAuthInit(false);
   };
 
