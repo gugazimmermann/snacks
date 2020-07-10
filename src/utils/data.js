@@ -1,48 +1,14 @@
 export const statement = [
   {
     id: 1,
-    name: '🌈 Josh',
+    name: 'Josh',
     handle: '@JoshWComeau',
     date: '10h',
     content:
-      '🔥 Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
+      'Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
     image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
     avatar:
-      'https://pbs.twimg.com/profile_images/1242807739681845248/HeUb7BAt_400x400.jpg',
-    comments: 12,
-    retweets: 36,
-    hearts: 175,
-  },
-];
-
-export const stores = [
-  {
-    id: 1,
-    name: '🌈 Josh',
-    handle: '@JoshWComeau',
-    date: '10h',
-    content:
-      '🔥 Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
-    image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
-    avatar:
-      'https://pbs.twimg.com/profile_images/1242807739681845248/HeUb7BAt_400x400.jpg',
-    comments: 12,
-    retweets: 36,
-    hearts: 175,
-  },
-];
-
-export const twitts = [
-  {
-    id: 1,
-    name: '🌈 Josh',
-    handle: '@JoshWComeau',
-    date: '10h',
-    content:
-      '🔥 Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
-    image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
-    avatar:
-      'https://pbs.twimg.com/profile_images/1242807739681845248/HeUb7BAt_400x400.jpg',
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
     comments: 12,
     retweets: 36,
     hearts: 175,
@@ -56,7 +22,7 @@ export const twitts = [
       'Not sure if I should be proud or ashamed of this piece of art 😅\n\n#Typescript',
     image: 'https://pbs.twimg.com/media/EONH4KWX4AEV-JP?format=jpg&name=medium',
     avatar:
-      'https://pbs.twimg.com/profile_images/1203032057875771393/x0nVAZPL_400x400.jpg',
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
     comments: 64,
     retweets: 87,
     hearts: 400,
@@ -71,21 +37,21 @@ export const twitts = [
     image:
       'https://static.antyweb.pl/uploads/2014/09/IPod_classic_6G_80GB_packaging-2007-09-22-1420x670.jpg',
     avatar:
-      'https://pbs.twimg.com/profile_images/1274435026482937858/JZmznbJO_400x400.jpg',
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
     comments: 23,
     retweets: 21,
     hearts: 300,
   },
   {
     id: 4,
-    name: '🌈 Josh',
+    name: 'Josh',
     handle: '@JoshWComeau',
     date: '10h',
     content:
-      '🔥 Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
+      'Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
     image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
     avatar:
-      'https://pbs.twimg.com/profile_images/1242807739681845248/HeUb7BAt_400x400.jpg',
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
     comments: 12,
     retweets: 36,
     hearts: 175,
@@ -99,7 +65,7 @@ export const twitts = [
       'Not sure if I should be proud or ashamed of this piece of art 😅\n\n#Typescript',
     image: 'https://pbs.twimg.com/media/EONH4KWX4AEV-JP?format=jpg&name=medium',
     avatar:
-      'https://pbs.twimg.com/profile_images/1203032057875771393/x0nVAZPL_400x400.jpg',
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
     comments: 64,
     retweets: 87,
     hearts: 400,
@@ -114,7 +80,113 @@ export const twitts = [
     image:
       'https://static.antyweb.pl/uploads/2014/09/IPod_classic_6G_80GB_packaging-2007-09-22-1420x670.jpg',
     avatar:
-      'https://pbs.twimg.com/profile_images/1274435026482937858/JZmznbJO_400x400.jpg',
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 23,
+    retweets: 21,
+    hearts: 300,
+  },
+];
+
+export const stores = [
+  {
+    id: 1,
+    name: 'Josh',
+    handle: '@JoshWComeau',
+    date: '10h',
+    content:
+      'Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
+    image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 12,
+    retweets: 36,
+    hearts: 175,
+  },
+];
+
+export const twitts = [
+  {
+    id: 1,
+    name: 'Josh',
+    handle: '@JoshWComeau',
+    date: '10h',
+    content:
+      'Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
+    image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 12,
+    retweets: 36,
+    hearts: 175,
+  },
+  {
+    id: 2,
+    name: 'Satyajit Sahoo',
+    handle: '@satya164',
+    date: '20h',
+    content:
+      'Not sure if I should be proud or ashamed of this piece of art 😅\n\n#Typescript',
+    image: 'https://pbs.twimg.com/media/EONH4KWX4AEV-JP?format=jpg&name=medium',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 64,
+    retweets: 87,
+    hearts: 400,
+  },
+  {
+    id: 3,
+    name: 'Elvin',
+    handle: '@elvin_not_11',
+    date: '14h',
+    content:
+      'Hid the home indicator from the app so the device resembles an actual iPod even more. Thanks @flipeesposito for the suggestion!',
+    image:
+      'https://static.antyweb.pl/uploads/2014/09/IPod_classic_6G_80GB_packaging-2007-09-22-1420x670.jpg',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 23,
+    retweets: 21,
+    hearts: 300,
+  },
+  {
+    id: 4,
+    name: 'Josh',
+    handle: '@JoshWComeau',
+    date: '10h',
+    content:
+      'Automatically use "smart" directional curly quotes with the `quotes` CSS property! Even handles nested quotes with the <q> tag :o',
+    image: 'https://pbs.twimg.com/media/EOUrCOcWAAA71rA?format=png&name=small',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 12,
+    retweets: 36,
+    hearts: 175,
+  },
+  {
+    id: 5,
+    name: 'Satyajit Sahoo',
+    handle: '@satya164',
+    date: '20h',
+    content:
+      'Not sure if I should be proud or ashamed of this piece of art 😅\n\n#Typescript',
+    image: 'https://pbs.twimg.com/media/EONH4KWX4AEV-JP?format=jpg&name=medium',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
+    comments: 64,
+    retweets: 87,
+    hearts: 400,
+  },
+  {
+    id: 6,
+    name: 'Elvin',
+    handle: '@elvin_not_11',
+    date: '14h',
+    content:
+      'Hid the home indicator from the app so the device resembles an actual iPod even more. Thanks @flipeesposito for the suggestion!',
+    image:
+      'https://static.antyweb.pl/uploads/2014/09/IPod_classic_6G_80GB_packaging-2007-09-22-1420x670.jpg',
+    avatar:
+      'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
     comments: 23,
     retweets: 21,
     hearts: 300,
@@ -129,14 +201,14 @@ export const notificationTweets = [
     name: 'Leandro Fevre',
     people: [
       {
-        name: 'Evan Bacon 🥓',
+        name: 'Evan Bacon',
         image:
-          'https://pbs.twimg.com/profile_images/1270298425590865921/0dPwik_B_400x400.jpg',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
       {
         name: 'Leandro Favre',
         image:
-          'https://pbs.twimg.com/profile_images/1265688225076690945/JpshyTTJ_400x400.png',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
     ],
   },
@@ -148,7 +220,7 @@ export const notificationTweets = [
       {
         name: 'Wojteg1337',
         image:
-          'https://pbs.twimg.com/profile_images/1251913970660843520/hyH5ML2H_400x400.jpg',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
     ],
   },
@@ -161,7 +233,7 @@ export const notificationTweets = [
       {
         name: 'Nader Dabit',
         image:
-          'https://pbs.twimg.com/profile_images/1268352530423205889/V6Nz7mIt_400x400.jpg',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
     ],
   },
@@ -172,14 +244,14 @@ export const notificationTweets = [
     name: 'Leandro Fevre',
     people: [
       {
-        name: 'Evan Bacon 🥓',
+        name: 'Evan Bacon',
         image:
-          'https://pbs.twimg.com/profile_images/1270298425590865921/0dPwik_B_400x400.jpg',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
       {
         name: 'Leandro Favre',
         image:
-          'https://pbs.twimg.com/profile_images/1265688225076690945/JpshyTTJ_400x400.png',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
     ],
   },
@@ -191,7 +263,7 @@ export const notificationTweets = [
       {
         name: 'Wojteg1337',
         image:
-          'https://pbs.twimg.com/profile_images/1164452902913675264/cn3bEqJp_400x400.jpg',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
     ],
   },
@@ -204,7 +276,7 @@ export const notificationTweets = [
       {
         name: 'Nader Dabit',
         image:
-          'https://pbs.twimg.com/profile_images/1268352530423205889/V6Nz7mIt_400x400.jpg',
+          'https://media-exp1.licdn.com/dms/image/C5603AQHyYI0zGlPqIg/profile-displayphoto-shrink_200_200/0?e=1599696000&v=beta&t=kaUDTNqkXUo6nPaycg-jMUb9RQNBBy7rVIxCCE71_2s',
       },
     ],
   },
