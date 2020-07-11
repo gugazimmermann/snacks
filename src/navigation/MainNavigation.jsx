@@ -1,5 +1,7 @@
 /* eslint-disable camelcase */
-import React, { useState, useEffect, useCallback } from 'react';
+import React, {
+  useContext, useState, useEffect, useCallback,
+} from 'react';
 import { Auth, Hub } from 'aws-amplify';
 import { NavigationContainer, DefaultTheme as reactDefaultTheme, DarkTheme as reactDarkTheme } from '@react-navigation/native';
 import { I18nManager } from 'react-native';
@@ -13,16 +15,17 @@ import { useColorScheme } from 'react-native-appearance';
 import {
   useFonts, Ubuntu_300Light, Ubuntu_300Light_Italic, Ubuntu_400Regular, Ubuntu_500Medium,
 } from '@expo-google-fonts/ubuntu';
-import AsyncStorage from '@react-native-community/async-storage';
-
+import { AuthContext } from '../context/AuthContext';
 import Initializing from '../components/Initializing';
 import AuthNavigation from './AuthNavigation';
 import AppNavigation from './AppNavigation';
 
-const MainNavigation = () => {
+export default function MainNavigation() {
+  const [state, dispatch] = useContext(AuthContext);
+
   const colorScheme = useColorScheme();
+
   const [authInit, setAuthInit] = useState(true);
-  const [user, setUser] = useState();
   const [theme, setTheme] = useState(
     colorScheme === 'dark' ? 'dark' : 'light',
   );
@@ -31,37 +34,16 @@ const MainNavigation = () => {
   async function checkAuth() {
     try {
       const currentUser = await Auth.currentAuthenticatedUser();
-      setUser(currentUser);
+      dispatch({ type: 'LOGIN', payload: currentUser });
     } catch (err) {
-      setUser(null);
+      dispatch({ type: 'LOGOUT' });
     }
     setAuthInit(false);
   }
 
-  const setStorageTheme = async (t) => {
-    try {
-      await AsyncStorage.setItem('@theme', t);
-    } catch (e) {
-      console.error(e);
-    }
-  };
-
-  const getStorageTheme = async () => {
-    try {
-      const value = await AsyncStorage.getItem('@theme');
-      if (value !== null) {
-        return value;
-      }
-    } catch (e) {
-      console.error(e);
-    }
-    return 'light';
-  };
-
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
-    setStorageTheme(newTheme);
   };
 
   const toggleRTL = useCallback(() => {
@@ -130,12 +112,11 @@ const MainNavigation = () => {
 
   useEffect(() => {
     checkAuth();
-    getStorageTheme().then((t) => setTheme(t));
     Hub.listen('auth', (data) => {
       const { payload } = data;
       if (payload.event === 'signOut') {
         setAuthInit(false);
-        setUser(null);
+        dispatch({ type: 'LOGOUT' });
       } else if (payload.event === 'signIn') {
         checkAuth();
       }
@@ -150,7 +131,7 @@ const MainNavigation = () => {
     <PaperProvider theme={customTheme()}>
       <StatusBar style="light" backgroundColor={customTheme().colors.primary} translucent={false} />
       <NavigationContainer theme={customTheme()}>
-        {user ? (
+        {state.user ? (
           <AppNavigation toggleTheme={toggleTheme} toggleRTL={toggleRTL} />
         ) : (
           <AuthNavigation />
@@ -158,6 +139,4 @@ const MainNavigation = () => {
       </NavigationContainer>
     </PaperProvider>
   );
-};
-
-export default MainNavigation;
+}

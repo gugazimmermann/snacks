@@ -3,25 +3,26 @@ import {
   Button, Paragraph, Dialog, Portal, TextInput,
 } from 'react-native-paper';
 
-export default function ConfirmCodeDialog({
-  theme, visible, show, code, setCode, error, setError, loading, send,
+export default function ForgotPasswordDialog({
+  theme, visible, show, email, setEmail, error, setError, loading, send,
 }) {
   return (
     <Portal>
       <Dialog visible={visible} close={() => show(false)} theme={theme}>
-        <Dialog.Title>Confirmation Code</Dialog.Title>
+        <Dialog.Title>Forgot Password</Dialog.Title>
         <Dialog.Content>
           <Paragraph style={{ marginTop: 8 }}>
-            Please, check your email and type the code
+            Please, type your email
           </Paragraph>
           <TextInput
             error={error}
             theme={theme}
-            label="Confirmation Code"
-            value={code}
-            keyboardType="numeric"
+            label="Email"
+            value={email}
+            textContentType="emailAddress"
+            keyboardType="email-address"
             onFocus={() => setError(false)}
-            onChangeText={(e) => setCode(e)}
+            onChangeText={(e) => setEmail(e)}
             style={{ marginTop: 8 }}
           />
         </Dialog.Content>

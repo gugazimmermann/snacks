@@ -11,7 +11,7 @@ import ErroDialog from '../components/dialogs/ErrorDialog';
 import ConfirmCodeDialog from '../components/dialogs/ConfirmCodeDialog';
 import logo from '../../assets/icon.png';
 
-function SignUp({ navigation }) {
+export default function SignUp({ navigation }) {
   const theme = useTheme();
 
   const [loading, setLoading] = useState(false);
@@ -62,6 +62,11 @@ function SignUp({ navigation }) {
     if (!password) setPasswordError(true);
     if (!repeatPassword) setRepeatPasswordError(true);
     if (!email || !password || !repeatPassword) return;
+    if (password !== repeatPassword) {
+      setPasswordError(true);
+      setRepeatPasswordError(true);
+      return;
+    }
     try {
       setLoading(true);
       await Auth.signUp({
@@ -70,10 +75,9 @@ function SignUp({ navigation }) {
         attributes: {
           email,
         },
-      }).then(() => {
-        setLoading(false);
-        setConfirmCodeDialog(true);
       });
+      setLoading(false);
+      setConfirmCodeDialog(true);
     } catch (err) {
       setLoading(false);
       setErrorDialogMsg(err.message);
@@ -99,7 +103,8 @@ function SignUp({ navigation }) {
     }
     try {
       setLoading(true);
-      await Auth.confirmSignUp(email, confirmationCode).then(() => signIn());
+      await Auth.confirmSignUp(email, confirmationCode);
+      signIn();
     } catch (err) {
       setErrorDialogMsg(err.message);
       errorDialog(true);
@@ -187,5 +192,3 @@ function SignUp({ navigation }) {
     </KeyboardAvoidingView>
   );
 }
-
-export default SignUp;

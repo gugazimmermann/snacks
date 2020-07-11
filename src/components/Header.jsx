@@ -3,7 +3,7 @@ import React from 'react';
 import { StyleSheet, TouchableOpacity } from 'react-native';
 import { useTheme, Appbar, Avatar } from 'react-native-paper';
 
-const Header = ({ scene, previous, navigation }) => {
+export default function Header({ scene, previous, navigation }) {
   const theme = useTheme();
 
   const { options } = scene.descriptor;
@@ -22,7 +22,11 @@ const Header = ({ scene, previous, navigation }) => {
     },
   });
   return (
-    <Appbar.Header statusBarHeight={0} style={styles.header} theme={{ colors: { primary: theme.colors.primary } }}>
+    <Appbar.Header
+      statusBarHeight={0}
+      style={styles.header}
+      theme={{ colors: { primary: theme.colors.primary } }}
+    >
       {previous ? (
         <Appbar.BackAction
           onPress={navigation.goBack}
@@ -43,6 +47,4 @@ const Header = ({ scene, previous, navigation }) => {
       <Appbar.Content title={title} />
     </Appbar.Header>
   );
-};
-
-export default Header;
+}

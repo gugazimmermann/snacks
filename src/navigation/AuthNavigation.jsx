@@ -6,7 +6,7 @@ import SignUp from '../screens/SignUp';
 
 const Stack = createStackNavigator();
 
-function AuthNavigation() {
+export default function AuthNavigation() {
   return (
     <Stack.Navigator
       initialRouteName="Login"
@@ -21,5 +21,3 @@ function AuthNavigation() {
     </Stack.Navigator>
   );
 }
-
-export default AuthNavigation;

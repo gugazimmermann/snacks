@@ -5,14 +5,16 @@ import {
   useTheme, Colors, Card, TextInput, Button, Text,
 } from 'react-native-paper';
 import {
-  KeyboardAvoidingView, StyleSheet, Image, View,
+  KeyboardAvoidingView, StyleSheet, Image, View, TouchableOpacity,
 } from 'react-native';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import SendCodeDialog from '../components/dialogs/SendCodeDialog';
 import ConfirmCodeDialog from '../components/dialogs/ConfirmCodeDialog';
+import ForgotPasswordDialog from '../components/dialogs/ForgotPasswordDialog';
+import ConfirmForgotPasswordDialog from '../components/dialogs/ConfirmForgotPasswordDialog';
 import logo from '../../assets/icon.png';
 
-function Login({ navigation }) {
+export default function Login({ navigation }) {
   const theme = useTheme();
 
   const [loading, setLoading] = useState(false);
@@ -27,6 +29,14 @@ function Login({ navigation }) {
   const [sendCodeDialog, setSendCodeDialog] = useState(false);
   const [sendCodeDialogMsg, setSendCodeDialogMsg] = useState(false);
   const [confirmCodeDialog, setConfirmCodeDialog] = useState(false);
+  const [forgotPasswordDialog, setForgotPasswordDialog] = useState(false);
+  const [confirmForgotPasswordDialog, setConfirmForgotPasswordDialog] = useState(false);
+  const [codePassword, setCodePassword] = useState('');
+  const [codePasswordError, setCodePasswordError] = useState(false);
+  const [newPassword, setNewPassword] = useState('');
+  const [newPasswordError, setNewPasswordError] = useState(false);
+  const [repeatNewPassword, setRepeatNewPassword] = useState('');
+  const [repeatNewPasswordError, setRepeatNewPasswordError] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -96,13 +106,16 @@ function Login({ navigation }) {
     }
     try {
       setLoading(true);
-      await Auth.confirmSignUp(email, confirmationCode).then(() => signIn());
+      await Auth.confirmSignUp(email, confirmationCode);
+      setConfirmCodeDialog(false);
+      setLoading(false);
+      signIn();
     } catch (err) {
+      setConfirmCodeDialog(false);
+      setLoading(false);
       setErrorDialogMsg(err.message);
-      errorDialog(true);
+      setErrorDialog(true);
     }
-    setConfirmCodeDialog(false);
-    setLoading(false);
   }
 
   async function resendConfirmationCode() {
@@ -116,6 +129,46 @@ function Login({ navigation }) {
     }
     setSendCodeDialog(false);
     setLoading(false);
+  }
+
+  async function forgotPassword() {
+    try {
+      await Auth.forgotPassword(email);
+      setForgotPasswordDialog(false);
+      setLoading(false);
+      setConfirmForgotPasswordDialog(true);
+    } catch (err) {
+      setForgotPasswordDialog(false);
+      setLoading(false);
+      setErrorDialogMsg(err.message);
+      setErrorDialog(true);
+    }
+  }
+
+  async function forgotPasswordSubmit() {
+    setLoading(true);
+    if (!codePassword) setCodePasswordError(true);
+    if (!newPassword) setNewPasswordError(true);
+    if (!repeatNewPassword) setRepeatNewPasswordError(true);
+    if (!codePassword || !newPassword || !repeatNewPassword) return;
+    if (newPassword !== repeatNewPassword) {
+      setNewPasswordError(true);
+      setRepeatNewPasswordError(true);
+      return;
+    }
+    try {
+      console.log(email, codePassword, newPassword);
+      await Auth.forgotPasswordSubmit(email, codePassword, newPassword);
+      setPassword(codePassword);
+      setForgotPasswordDialog(false);
+      setLoading(false);
+      signIn();
+    } catch (err) {
+      setForgotPasswordDialog(false);
+      setLoading(false);
+      setErrorDialogMsg(err.message);
+      setErrorDialog(true);
+    }
   }
 
   return (
@@ -160,7 +213,9 @@ function Login({ navigation }) {
           </Button>
         </Card.Actions>
         <Card.Actions>
-          <Text>Forgot Password?</Text>
+          <TouchableOpacity onPress={() => setForgotPasswordDialog(true)}>
+            <Text>Forgot Password?</Text>
+          </TouchableOpacity>
         </Card.Actions>
       </Card>
       <View>
@@ -168,7 +223,7 @@ function Login({ navigation }) {
           style={[styles.button, styles.facebook]}
           icon="facebook"
           mode="contained"
-          onPress={() => console.log('Facebook')}
+          onPress={() => Auth.federatedSignIn({ provider: 'Facebook' })}
           disabled={loading}
         >
           Sign In With Facebook
@@ -177,7 +232,7 @@ function Login({ navigation }) {
           style={[styles.button, styles.google]}
           icon="google"
           mode="contained"
-          onPress={() => console.log('Google')}
+          onPress={() => Auth.federatedSignIn({ provider: 'Google' })}
           disabled={loading}
         >
           Sign In With Google
@@ -217,8 +272,36 @@ function Login({ navigation }) {
         loading={loading}
         send={confirmCode}
       />
+      <ForgotPasswordDialog
+        theme={theme}
+        visible={forgotPasswordDialog}
+        show={setForgotPasswordDialog}
+        email={email}
+        setEmail={setEmail}
+        error={emailError}
+        setError={setEmailError}
+        loading={loading}
+        send={forgotPassword}
+      />
+      <ConfirmForgotPasswordDialog
+        theme={theme}
+        visible={confirmForgotPasswordDialog}
+        show={setConfirmForgotPasswordDialog}
+        codePassword={codePassword}
+        setCodePassword={setCodePassword}
+        codePasswordError={codePasswordError}
+        setCodePasswordError={setCodePasswordError}
+        newPassword={newPassword}
+        setNewPassword={setNewPassword}
+        newPasswordError={newPasswordError}
+        setNewPasswordError={setNewPasswordError}
+        repeatNewPassword={repeatNewPassword}
+        setRepeatNewPassword={setRepeatNewPassword}
+        repeatNewPasswordError={repeatNewPasswordError}
+        setRepeatNewPasswordError={setRepeatNewPasswordError}
+        loading={loading}
+        send={forgotPasswordSubmit}
+      />
     </KeyboardAvoidingView>
   );
 }
-
-export default Login;
