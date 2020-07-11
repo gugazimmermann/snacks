@@ -1,12 +1,14 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
+import constants from 'expo-constants';
 import {
-  useTheme, Card, TextInput, Button, Paragraph, Dialog, Portal,
+  useTheme, Text, Card, TextInput, Button,
 } from 'react-native-paper';
 import {
-  KeyboardAvoidingView, StyleSheet, Image,
+  KeyboardAvoidingView, StyleSheet, Image, View,
 } from 'react-native';
-import { statusBarHeight } from 'expo-constants';
+import ErroDialog from '../components/dialogs/ErrorDialog';
+import ConfirmCodeDialog from '../components/dialogs/ConfirmCodeDialog';
 import logo from '../../assets/icon.png';
 
 function SignUp({ navigation }) {
@@ -14,20 +16,16 @@ function SignUp({ navigation }) {
 
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [confirmationCode, setConfirmationCode] = useState('');
-
-  const inputEl = useRef(null);
-
   const [emailError, setEmailError] = useState(false);
+  const [password, setPassword] = useState('');
   const [passwordError, setPasswordError] = useState(false);
+  const [repeatPassword, setRepeatPassword] = useState('');
   const [repeatPasswordError, setRepeatPasswordError] = useState(false);
+  const [confirmationCode, setConfirmationCode] = useState('');
   const [confirmationCodeError, setConfirmationCodeError] = useState(false);
-  const [showErrorDialog, setShowErrorDialog] = useState(false);
+  const [errorDialog, setErrorDialog] = useState(false);
   const [errorDialogMsg, setErrorDialogMsg] = useState('');
-
-  const [showConfirmationDialog, setShowConfirmationDialog] = useState(false);
+  const [confirmCodeDialog, setConfirmCodeDialog] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -42,11 +40,13 @@ function SignUp({ navigation }) {
       alignSelf: 'center',
       height: 192 / 2,
       width: 192 / 2,
-      margin: 16,
-      marginTop: statusBarHeight,
+      marginTop: constants.statusBarHeight,
     },
-    textImput: {
-      marginBottom: 8,
+    title: {
+      ...theme.fonts.medium,
+      color: theme.colors.primary,
+      fontSize: 36,
+      textAlign: 'center',
     },
     button: {
       width: '100%',
@@ -56,26 +56,6 @@ function SignUp({ navigation }) {
       backgroundColor: theme.colors.accent,
     },
   });
-
-  function openErrorDialog() {
-    setLoading(false);
-    setShowErrorDialog(true);
-  }
-  function closeErrorDialog() {
-    setLoading(false);
-    setShowErrorDialog(false);
-  }
-
-  function openConfirmationDialog() {
-    setLoading(false);
-    setShowConfirmationDialog(true);
-    inputEl.current.focus();
-  }
-
-  function closeConfirmationDialog() {
-    setLoading(false);
-    setShowConfirmationDialog(false);
-  }
 
   async function handleSignUp() {
     if (!email) setEmailError(true);
@@ -91,84 +71,81 @@ function SignUp({ navigation }) {
           email,
         },
       }).then(() => {
-        openConfirmationDialog();
+        setLoading(false);
+        setConfirmCodeDialog(true);
       });
     } catch (err) {
+      setLoading(false);
       setErrorDialogMsg(err.message);
-      openErrorDialog();
+      setErrorDialog(true);
     }
   }
 
-  async function handleSignIn() {
+  async function signIn() {
+    setLoading(true);
     try {
-      setLoading(true);
       await Auth.signIn(email, password);
     } catch (err) {
+      setLoading(false);
       setErrorDialogMsg(err.message);
-      openErrorDialog();
+      setErrorDialog(true);
     }
   }
 
-  async function confirmSignUp() {
+  async function confirmCode() {
     if (!confirmationCode) {
       setConfirmationCodeError(true);
       return;
     }
     try {
       setLoading(true);
-      await Auth
-        .confirmSignUp(email, confirmationCode)
-        .then(() => handleSignIn());
+      await Auth.confirmSignUp(email, confirmationCode).then(() => signIn());
     } catch (err) {
-      closeConfirmationDialog();
       setErrorDialogMsg(err.message);
-      openErrorDialog();
+      errorDialog(true);
     }
+    setConfirmCodeDialog(false);
+    setLoading(false);
   }
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-    >
-      <Image
-        style={styles.logo}
-        source={logo}
-      />
+    <KeyboardAvoidingView style={styles.container}>
+      <View>
+        <Image style={styles.logo} source={logo} />
+        <Text style={styles.title}>Snacks!</Text>
+      </View>
       <Card>
         <Card.Content>
           <TextInput
-            error={emailError}
-            theme={theme}
             label="Email"
-            placeholder="Email"
             textContentType="emailAddress"
             keyboardType="email-address"
             value={email}
-            onFocus={() => setEmailError(false)}
             onChangeText={(e) => setEmail(e)}
-            style={styles.textImput}
+            onFocus={() => setEmailError(false)}
+            error={emailError}
+            style={styles.textInput}
+            theme={theme}
           />
           <TextInput
-            error={passwordError}
-            theme={theme}
             label="Password"
-            placeholder="Password"
-            textContentType="password"
+            secureTextEntry
             value={password}
-            onFocus={() => setPasswordError(false)}
             onChangeText={(p) => setPassword(p)}
-            style={styles.textImput}
+            onFocus={() => setPasswordError(false)}
+            error={passwordError}
+            style={styles.textInput}
+            theme={theme}
           />
           <TextInput
-            error={repeatPasswordError}
-            theme={theme}
             label="Repeat Password"
-            placeholder="Repeat Password"
-            type="password"
+            secureTextEntry
             value={repeatPassword}
-            onFocus={() => setRepeatPasswordError(false)}
             onChangeText={(p) => setRepeatPassword(p)}
-            style={styles.textImput}
+            onFocus={() => setRepeatPasswordError(false)}
+            error={repeatPasswordError}
+            style={styles.textInput}
+            theme={theme}
           />
         </Card.Content>
         <Card.Actions>
@@ -177,6 +154,7 @@ function SignUp({ navigation }) {
             mode="contained"
             onPress={() => handleSignUp()}
             loading={loading}
+            disabled={loading}
           >
             Sign Up
           </Button>
@@ -189,40 +167,23 @@ function SignUp({ navigation }) {
       >
         Back to Login
       </Button>
-      <Portal>
-        <Dialog visible={showConfirmationDialog} onDismiss={closeConfirmationDialog} theme={theme}>
-          <Dialog.Title>Confirmation Code</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph style={styles.textImput}>
-              Please, check your email and type the code
-            </Paragraph>
-            <TextInput
-              error={confirmationCodeError}
-              theme={theme}
-              label="Confirmation Code"
-              placeholder="Confirmation Code"
-              value={confirmationCode}
-              onFocus={() => setConfirmationCodeError(false)}
-              onChangeText={(e) => setConfirmationCode(e)}
-              style={styles.textImput}
-              ref={inputEl}
-            />
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button color="grey" onPress={closeConfirmationDialog}>Cancel</Button>
-            <Button loading={loading} onPress={confirmSignUp}>Confirm</Button>
-          </Dialog.Actions>
-        </Dialog>
-        <Dialog visible={showErrorDialog} onDismiss={closeErrorDialog} theme={theme}>
-          <Dialog.Title>Login Error</Dialog.Title>
-          <Dialog.Content>
-            <Paragraph>{errorDialogMsg}</Paragraph>
-          </Dialog.Content>
-          <Dialog.Actions>
-            <Button onPress={closeErrorDialog}>Ok</Button>
-          </Dialog.Actions>
-        </Dialog>
-      </Portal>
+      <ErroDialog
+        theme={theme}
+        visible={errorDialog}
+        show={setErrorDialog}
+        msg={errorDialogMsg}
+      />
+      <ConfirmCodeDialog
+        theme={theme}
+        visible={confirmCodeDialog}
+        show={setConfirmCodeDialog}
+        code={confirmationCode}
+        setCode={setConfirmationCode}
+        error={confirmationCodeError}
+        setError={setConfirmationCodeError}
+        loading={loading}
+        send={confirmCode}
+      />
     </KeyboardAvoidingView>
   );
 }

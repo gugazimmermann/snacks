@@ -1,30 +1,19 @@
 /* eslint-disable camelcase */
 import React, { useState, useEffect, useCallback } from 'react';
 import { Auth, Hub } from 'aws-amplify';
-import {
-  Colors,
-  configureFonts,
-  Provider as PaperProvider,
-  DefaultTheme as PaperDefaultTheme,
-  DarkTheme as PaperDarkTheme,
-} from 'react-native-paper';
-import { DefaultTheme, DarkTheme } from '@react-navigation/native';
+import { NavigationContainer, DefaultTheme as reactDefaultTheme, DarkTheme as reactDarkTheme } from '@react-navigation/native';
 import { I18nManager } from 'react-native';
 import { Updates } from 'expo';
 import { StatusBar } from 'expo-status-bar';
-import AsyncStorage from '@react-native-community/async-storage';
+import {
+  Colors, configureFonts, Provider as PaperProvider, DefaultTheme, DarkTheme,
+} from 'react-native-paper';
+
 import { useColorScheme } from 'react-native-appearance';
 import {
-  useFonts,
-  Ubuntu_300Light,
-  Ubuntu_300Light_Italic,
-  Ubuntu_400Regular,
-  Ubuntu_400Regular_Italic,
-  Ubuntu_500Medium,
-  Ubuntu_500Medium_Italic,
-  Ubuntu_700Bold,
-  Ubuntu_700Bold_Italic,
+  useFonts, Ubuntu_300Light, Ubuntu_300Light_Italic, Ubuntu_400Regular, Ubuntu_500Medium,
 } from '@expo-google-fonts/ubuntu';
+import AsyncStorage from '@react-native-community/async-storage';
 
 import Initializing from '../components/Initializing';
 import AuthNavigation from './AuthNavigation';
@@ -43,7 +32,6 @@ const MainNavigation = () => {
     try {
       const currentUser = await Auth.currentAuthenticatedUser();
       setUser(currentUser);
-      console.log(JSON.stringify(currentUser));
     } catch (err) {
       setUser(null);
     }
@@ -85,11 +73,7 @@ const MainNavigation = () => {
     Ubuntu_300Light,
     Ubuntu_300Light_Italic,
     Ubuntu_400Regular,
-    Ubuntu_400Regular_Italic,
     Ubuntu_500Medium,
-    Ubuntu_500Medium_Italic,
-    Ubuntu_700Bold,
-    Ubuntu_700Bold_Italic,
   });
 
   const fontConfig = {
@@ -114,30 +98,34 @@ const MainNavigation = () => {
   };
 
   function customTheme() {
-    const seetheme = theme === 'light' ? {
-      ...PaperDefaultTheme,
-      ...DefaultTheme,
+    const custom = {
       colors: {
-        ...PaperDefaultTheme.colors,
-        ...DefaultTheme.colors,
-        primary: Colors.teal500,
-        accent: Colors.orange500,
-      },
-      fonts: configureFonts(fontConfig),
-      rtl,
-    } : {
-      ...PaperDarkTheme,
-      ...DarkTheme,
-      colors: {
-        ...PaperDarkTheme.colors,
-        ...DarkTheme.colors,
         primary: Colors.teal500,
         accent: Colors.orange500,
       },
       fonts: configureFonts(fontConfig),
       rtl,
     };
-    return seetheme;
+    const whatTheme = theme === 'light' ? {
+      ...DefaultTheme,
+      ...reactDefaultTheme,
+      ...custom,
+      colors: {
+        ...DefaultTheme.colors,
+        ...reactDefaultTheme.colors,
+        ...custom.colors,
+      },
+    } : {
+      ...DarkTheme,
+      ...reactDarkTheme,
+      ...custom,
+      colors: {
+        ...DarkTheme.colors,
+        ...reactDarkTheme.colors,
+        ...custom.colors,
+      },
+    };
+    return whatTheme;
   }
 
   useEffect(() => {
@@ -145,7 +133,6 @@ const MainNavigation = () => {
     getStorageTheme().then((t) => setTheme(t));
     Hub.listen('auth', (data) => {
       const { payload } = data;
-      console.log('A new auth event has happened: ', data);
       if (payload.event === 'signOut') {
         setAuthInit(false);
         setUser(null);
@@ -161,12 +148,14 @@ const MainNavigation = () => {
 
   return (
     <PaperProvider theme={customTheme()}>
-      <StatusBar style={theme === 'light' ? 'dark' : 'light'} />
-      {fontsLoaded && !authInit && user ? (
-        <AppNavigation toggleTheme={toggleTheme} toggleRTL={toggleRTL} />
-      ) : (
-        <AuthNavigation />
-      )}
+      <StatusBar style="light" backgroundColor={customTheme().colors.primary} translucent={false} />
+      <NavigationContainer theme={customTheme()}>
+        {user ? (
+          <AppNavigation toggleTheme={toggleTheme} toggleRTL={toggleRTL} />
+        ) : (
+          <AuthNavigation />
+        )}
+      </NavigationContainer>
     </PaperProvider>
   );
 };

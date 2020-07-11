@@ -14,16 +14,18 @@ const Header = ({ scene, previous, navigation }) => {
       : scene.route.name;
 
   const styles = StyleSheet.create({
+    header: {
+
+    },
     avatar: {
       marginLeft: 16,
     },
   });
   return (
-    <Appbar.Header theme={{ colors: { primary: theme.colors.surface } }}>
+    <Appbar.Header statusBarHeight={0} style={styles.header} theme={{ colors: { primary: theme.colors.primary } }}>
       {previous ? (
         <Appbar.BackAction
           onPress={navigation.goBack}
-          color={theme.colors.primary}
         />
       ) : (
         <TouchableOpacity
