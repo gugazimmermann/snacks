@@ -13,27 +13,54 @@ import { useColorScheme } from 'react-native-appearance';
 import {
   useFonts, Ubuntu_300Light, Ubuntu_300Light_Italic, Ubuntu_400Regular, Ubuntu_500Medium,
 } from '@expo-google-fonts/ubuntu';
+import AsyncStorage from '@react-native-community/async-storage';
+import mainTheme from '../styles/mainTheme';
 import { AuthContext } from '../context/AuthContext';
+
 import Initializing from '../components/Initializing';
 import AuthNavigation from './AuthNavigation';
 import AppNavigation from './AppNavigation';
 
-import mainTheme from '../styles/mainTheme';
-
 export default function MainNavigation() {
+  const [state, dispatch] = useContext(AuthContext);
   const colorScheme = useColorScheme();
   const [theme, setTheme] = useState(
     colorScheme === 'dark' ? 'dark' : 'light',
   );
   const [rtl] = useState(I18nManager.isRTL);
+  const [authInit, setAuthInit] = useState(true);
+
+  const setStorageTheme = async (t) => {
+    try {
+      await AsyncStorage.setItem('@theme', t);
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
+  const getStorageTheme = async () => {
+    try {
+      const value = await AsyncStorage.getItem('@theme');
+      if (value !== null) {
+        return value;
+      }
+    } catch (e) {
+      console.error(e);
+    }
+    return 'light';
+  };
+
   const toggleTheme = () => {
     const newTheme = theme === 'light' ? 'dark' : 'light';
     setTheme(newTheme);
+    setStorageTheme(newTheme);
   };
+
   const toggleRTL = useCallback(() => {
     I18nManager.forceRTL(!rtl);
     Updates.reloadFromCache();
   }, [rtl]);
+
   const [fontsLoaded] = useFonts({
     Ubuntu_300Light,
     Ubuntu_300Light_Italic,
@@ -41,8 +68,6 @@ export default function MainNavigation() {
     Ubuntu_500Medium,
   });
 
-  const [state, dispatch] = useContext(AuthContext);
-  const [authInit, setAuthInit] = useState(true);
   async function checkAuth() {
     try {
       const currentUser = await Auth.currentAuthenticatedUser();
@@ -52,8 +77,10 @@ export default function MainNavigation() {
     }
     setAuthInit(false);
   }
+
   useEffect(() => {
     checkAuth();
+    getStorageTheme().then((t) => setTheme(t));
     Hub.listen('auth', (data) => {
       const { payload } = data;
       if (payload.event === 'signOut') {
