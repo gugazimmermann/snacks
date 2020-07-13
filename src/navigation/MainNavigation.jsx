@@ -2,18 +2,22 @@
 import React, {
   useContext, useState, useEffect, useCallback,
 } from 'react';
-import { Auth, Hub } from 'aws-amplify';
+import { Hub } from 'aws-amplify';
 import { NavigationContainer } from '@react-navigation/native';
 import { I18nManager } from 'react-native';
 import { Updates } from 'expo';
 import { StatusBar } from 'expo-status-bar';
 import { Provider as PaperProvider } from 'react-native-paper';
-
 import { useColorScheme } from 'react-native-appearance';
 import {
-  useFonts, Ubuntu_300Light, Ubuntu_300Light_Italic, Ubuntu_400Regular, Ubuntu_500Medium,
+  useFonts,
+  Ubuntu_300Light,
+  Ubuntu_300Light_Italic,
+  Ubuntu_400Regular,
+  Ubuntu_500Medium,
 } from '@expo-google-fonts/ubuntu';
 import AsyncStorage from '@react-native-community/async-storage';
+import { currentAuthenticatedUser } from '../api/auth';
 import mainTheme from '../styles/mainTheme';
 import { AuthContext } from '../context/AuthContext';
 
@@ -70,7 +74,7 @@ export default function MainNavigation() {
 
   async function checkAuth() {
     try {
-      const currentUser = await Auth.currentAuthenticatedUser();
+      const currentUser = await currentAuthenticatedUser();
       dispatch({ type: 'LOGIN', payload: currentUser });
     } catch (err) {
       dispatch({ type: 'LOGOUT' });

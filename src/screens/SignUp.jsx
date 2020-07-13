@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
 import {
   useTheme, Text, Card, TextInput, Button,
 } from 'react-native-paper';
 import { KeyboardAvoidingView, Image, View } from 'react-native';
+import * as auth from '../api/auth';
 import getStyles from '../styles/signUp';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
@@ -51,18 +51,11 @@ export default function SignUp({ navigation }) {
     if (!validateSignUp()) return;
     try {
       setLoading(true);
-      await Auth.signUp({
-        username: userData.email,
-        password: userData.password,
-        attributes: {
-          email: userData.email,
-          given_name: userData.givenName,
-        },
-      });
+      const { email, password, givenName } = userData;
+      await auth.signUp(email, password, givenName);
       setLoading(false);
       setConfirmSignUp(true);
     } catch (err) {
-      console.log(err);
       setLoading(false);
       setError({ show: true, msg: err.message });
     }
@@ -71,7 +64,8 @@ export default function SignUp({ navigation }) {
   async function handleSignIn() {
     try {
       setLoading(true);
-      await Auth.signIn(userData.email, userData.password);
+      const { email, password } = userData;
+      await auth.signIn(email, password);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -86,7 +80,8 @@ export default function SignUp({ navigation }) {
     }
     try {
       setLoading(true);
-      await Auth.confirmSignUp(userData.email, userData.confirmationCode);
+      const { email, confirmationCode } = userData;
+      await auth.confirmSignUp(email, confirmationCode);
       setConfirmSignUp(false);
       setLoading(false);
       handleSignIn();

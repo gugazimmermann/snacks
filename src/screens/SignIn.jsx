@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
-import { Auth } from 'aws-amplify';
 import {
   useTheme, Card, TextInput, Button, Text,
 } from 'react-native-paper';
 import {
   KeyboardAvoidingView, Image, View, TouchableOpacity,
 } from 'react-native';
+import * as auth from '../api/auth';
 import getStyles from '../styles/signIn';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import ResendSignUp from '../components/dialogs/ResendSignUp';
@@ -56,7 +56,7 @@ export default function SignIn({ navigation }) {
     if (!email || !password) return;
     try {
       setLoading(true);
-      await Auth.signIn(email, password);
+      await auth.signIn(email, password);
       setLoading(false);
     } catch (err) {
       setLoading(false);
@@ -75,7 +75,7 @@ export default function SignIn({ navigation }) {
     }
     try {
       setLoading(true);
-      await Auth.resendSignUp(userData.email);
+      await auth.resendSignUp(userData.email);
       setLoading(false);
       setResendSignUp({ ...resendSignUp, show: false });
       setConfirmSignUp(true);
@@ -94,7 +94,7 @@ export default function SignIn({ navigation }) {
     }
     try {
       setLoading(true);
-      await Auth.confirmSignUp(email, confirmationCode);
+      await auth.confirmSignUp(email, confirmationCode);
       setConfirmSignUp(false);
       setLoading(false);
       handleSignIn();
@@ -111,7 +111,7 @@ export default function SignIn({ navigation }) {
     }
     try {
       setLoading(true);
-      await Auth.forgotPassword(userData.email);
+      await auth.forgotPassword(userData.email);
       setForgotPassword(false);
       setLoading(false);
       setConfirmForgotPassword(true);
@@ -151,7 +151,7 @@ export default function SignIn({ navigation }) {
       setLoading(true);
       const { email, codeForgotPassword, newPassword } = userData;
       setUserData({ ...userData, password: newPassword });
-      await Auth.forgotPasswordSubmit(email, codeForgotPassword, newPassword);
+      await auth.forgotPasswordSubmit(email, codeForgotPassword, newPassword);
       setForgotPassword(false);
       setLoading(false);
       handleSignIn();
