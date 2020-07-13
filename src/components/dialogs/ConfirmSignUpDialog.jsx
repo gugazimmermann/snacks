@@ -3,7 +3,7 @@ import {
   Button, Paragraph, Dialog, Portal, TextInput,
 } from 'react-native-paper';
 
-export default function ConfirmCodeDialog({
+export default function ConfirmSignUpDialog({
   theme, loading, visible, show, userData, setUserData, userDataError, setUserDataError, send,
 }) {
   return (

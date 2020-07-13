@@ -8,8 +8,8 @@ import {
   KeyboardAvoidingView, StyleSheet, Image, View, TouchableOpacity,
 } from 'react-native';
 import ErroDialog from '../components/dialogs/ErrorDialog';
-import SendCodeDialog from '../components/dialogs/SendCodeDialog';
-import ConfirmCodeDialog from '../components/dialogs/ConfirmCodeDialog';
+import ResendSignUp from '../components/dialogs/ResendSignUp';
+import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
 import ForgotPasswordDialog from '../components/dialogs/ForgotPasswordDialog';
 import ConfirmForgotPasswordDialog from '../components/dialogs/ConfirmForgotPasswordDialog';
 import logo from '../../assets/icon.png';
@@ -18,7 +18,6 @@ export default function Login({ navigation }) {
   const theme = useTheme();
 
   const [loading, setLoading] = useState(false);
-
   const [userData, setUserData] = useState({
     email: '',
     password: '',
@@ -39,11 +38,11 @@ export default function Login({ navigation }) {
     show: false,
     msg: '',
   });
-  const [sendCode, setSendCode] = useState({
+  const [resendSignUp, setResendSignUp] = useState({
     show: '',
     msg: '',
   });
-  const [confirmCode, setConfirmCode] = useState(false);
+  const [confirmSignUp, setConfirmSignUp] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [confirmForgotPassword, setConfirmForgotPassword] = useState(false);
 
@@ -88,9 +87,10 @@ export default function Login({ navigation }) {
 
   async function handleSignIn() {
     const { email, password } = userData;
-    console.log(password);
-    if (!email) setUserDataError({ ...userDataError, email: true });
-    if (!password) setUserDataError({ ...userDataError, password: true });
+    let userDataErrorClone = { ...userDataError };
+    if (!email) userDataErrorClone = { ...userDataErrorClone, email: true };
+    if (!password) userDataErrorClone = { ...userDataErrorClone, password: true };
+    setUserDataError(userDataErrorClone);
     if (!email || !password) return;
     try {
       setLoading(true);
@@ -99,7 +99,7 @@ export default function Login({ navigation }) {
     } catch (err) {
       setLoading(false);
       if (err.code === 'UserNotConfirmedException') {
-        setSendCode({ show: true, msg: err.message });
+        setResendSignUp({ show: true, msg: err.message });
       } else {
         setError({ show: true, msg: err.message });
       }
@@ -107,70 +107,93 @@ export default function Login({ navigation }) {
   }
 
   async function handleResendSignUp() {
+    if (!userData.email) {
+      setUserDataError({ ...userDataError, email: true });
+      return;
+    }
     try {
       setLoading(true);
       await Auth.resendSignUp(userData.email);
       setLoading(false);
-      setSendCode({ ...sendCode, show: false });
-      setConfirmCode(true);
+      setResendSignUp({ ...resendSignUp, show: false });
+      setConfirmSignUp(true);
     } catch (err) {
       setLoading(false);
-      setSendCode({ ...sendCode, show: false });
+      setResendSignUp({ ...resendSignUp, show: false });
       setError({ show: true, msg: err.message });
     }
   }
 
   async function handleConfirmSignUp() {
     const { confirmationCode, email } = userData;
-    if (!confirmationCode) setUserDataError({ ...userDataError, confirmationCode: true });
+    if (!confirmationCode) {
+      setUserDataError({ ...userDataError, confirmationCode: true });
+      return;
+    }
     try {
       setLoading(true);
       await Auth.confirmSignUp(email, confirmationCode);
-      setConfirmCode(false);
+      setConfirmSignUp(false);
       setLoading(false);
       handleSignIn();
     } catch (err) {
-      setConfirmCode(false);
       setLoading(false);
       setError({ show: true, msg: err.message });
     }
   }
 
   async function handleForgotPassword() {
+    if (!userData.email) {
+      setUserDataError({ ...userDataError, email: true });
+      return;
+    }
     try {
+      setLoading(true);
       await Auth.forgotPassword(userData.email);
       setForgotPassword(false);
       setLoading(false);
       setConfirmForgotPassword(true);
     } catch (err) {
-      setForgotPassword(false);
       setLoading(false);
       setError({ show: true, msg: err.message });
     }
   }
 
-  async function handleForgotPasswordSubmit() {
-    const {
-      email, codeForgotPassword, newPassword, repeatNewPassword,
-    } = userData;
-    console.log(newPassword);
-    if (!codeForgotPassword) setUserDataError({ ...userDataError, codeForgotPassword: true });
-    if (!newPassword) setUserDataError({ ...userDataError, newPassword: true });
-    if (!repeatNewPassword) setUserDataError({ ...userDataError, repeatNewPassword: true });
-    if (!codeForgotPassword || !newPassword || !repeatNewPassword) return;
-    if (newPassword !== repeatNewPassword) {
-      setUserDataError({ ...userDataError, newPassword: true, repeatNewPassword: true });
-      return;
+  function validadeForgotPasswordSubmit() {
+    let userDataErrorClone = {
+      email: false,
+      password: false,
+      confirmationCode: false,
+      codeForgotPassword: false,
+      newPassword: false,
+      repeatNewPassword: false,
+    };
+    Object.keys(userData).forEach((k) => {
+      if ((k !== 'undefined' && k !== 'password' && k !== 'confirmationCode') && !userData[k]) {
+        userDataErrorClone = { ...userDataErrorClone, [k]: true };
+      }
+    });
+    setUserDataError(userDataErrorClone);
+    console.log(userData.newPassword, userData.repeatNewPassword)
+    if (Object.values(userDataErrorClone).find((d) => d === true)) return false;
+    if (userData.newPassword !== userData.repeatNewPassword) {
+      setUserDataError({ ...userDataErrorClone, newPassword: true, repeatNewPassword: true });
+      return false;
     }
+    return true;
+  }
+
+  async function handleForgotPasswordSubmit() {
+    if (!validadeForgotPasswordSubmit()) return;
     try {
       setLoading(true);
+      const { email, codeForgotPassword, newPassword } = userData;
       setUserData({ ...userData, password: newPassword });
       await Auth.forgotPasswordSubmit(email, codeForgotPassword, newPassword);
       setForgotPassword(false);
       setLoading(false);
       handleSignIn();
     } catch (err) {
-      setForgotPassword(false);
       setLoading(false);
       setError({ show: true, msg: err.message });
     }
@@ -252,20 +275,19 @@ export default function Login({ navigation }) {
       >
         Sign Up
       </Button>
-      <ErroDialog theme={theme} data={error} show={setError} />
-      <SendCodeDialog
+      <ResendSignUp
         theme={theme}
         loading={loading}
-        visible={sendCode.show}
-        show={setSendCode}
-        msg={sendCode.msg}
+        visible={resendSignUp.show}
+        show={setResendSignUp}
+        msg={resendSignUp.msg}
         send={handleResendSignUp}
       />
-      <ConfirmCodeDialog
+      <ConfirmSignUpDialog
         theme={theme}
         loading={loading}
-        visible={confirmCode}
-        show={setConfirmCode}
+        visible={confirmSignUp}
+        show={setConfirmSignUp}
         userData={userData}
         setUserData={setUserData}
         userDataError={userDataError}
@@ -294,6 +316,7 @@ export default function Login({ navigation }) {
         setError={setUserDataError}
         send={handleForgotPasswordSubmit}
       />
+      <ErroDialog theme={theme} data={error} show={setError} />
     </KeyboardAvoidingView>
   );
 }

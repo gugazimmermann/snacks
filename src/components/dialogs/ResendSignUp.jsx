@@ -3,7 +3,7 @@ import {
   Button, Paragraph, Dialog, Portal,
 } from 'react-native-paper';
 
-export default function SendCodeDialog({
+export default function ResendSignUp({
   theme, loading, visible, show, msg, send,
 }) {
   return (

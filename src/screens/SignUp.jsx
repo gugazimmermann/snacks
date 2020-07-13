@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView, StyleSheet, Image, View,
 } from 'react-native';
 import ErroDialog from '../components/dialogs/ErrorDialog';
-import ConfirmCodeDialog from '../components/dialogs/ConfirmCodeDialog';
+import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
 import logo from '../../assets/icon.png';
 
 export default function SignUp({ navigation }) {
@@ -30,7 +30,7 @@ export default function SignUp({ navigation }) {
     confirmationCode: false,
   });
   const [error, setError] = useState({ show: false, msg: '' });
-  const [confirmCodeDialog, setConfirmCodeDialog] = useState(false);
+  const [confirmSignUp, setConfirmSignUp] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -94,7 +94,7 @@ export default function SignUp({ navigation }) {
         },
       });
       setLoading(false);
-      setConfirmCodeDialog(true);
+      setConfirmSignUp(true);
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -121,7 +121,7 @@ export default function SignUp({ navigation }) {
     try {
       setLoading(true);
       await Auth.confirmSignUp(userData.email, userData.confirmationCode);
-      setConfirmCodeDialog(false);
+      setConfirmSignUp(false);
       setLoading(false);
       handleSignIn();
     } catch (err) {
@@ -198,11 +198,10 @@ export default function SignUp({ navigation }) {
       >
         Back to Login
       </Button>
-      <ErroDialog theme={theme} data={error} show={setError} />
-      <ConfirmCodeDialog
+      <ConfirmSignUpDialog
         theme={theme}
-        visible={confirmCodeDialog}
-        show={setConfirmCodeDialog}
+        visible={confirmSignUp}
+        show={setConfirmSignUp}
         userData={userData}
         setUserData={setUserData}
         userDataError={userDataError}
@@ -210,6 +209,7 @@ export default function SignUp({ navigation }) {
         loading={loading}
         send={handleConfirmCode}
       />
+      <ErroDialog theme={theme} data={error} show={setError} />
     </KeyboardAvoidingView>
   );
 }
