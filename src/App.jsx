@@ -11,39 +11,39 @@ import MainNavigation from './navigation/MainNavigation';
 import AuthProvider from './context/AuthContext';
 import config from '../aws-exports';
 
-const amplifyConfig = {
-  ...config,
-  oauth: {
-    ...config.oauth,
-    urlOpener: async (url, redirectUrl) => {
-      const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(url, redirectUrl);
-      if (type === 'success') {
-        await WebBrowser.dismissBrowser();
-        if (Constants.platform.OS === 'ios') {
-          return Linking.openURL(newUrl);
-        }
-      }
-    },
-    options: {
-      AdvancedSecurityDataCollectionFlag: true,
-    },
-  },
-};
+// const amplifyConfig = {
+//   ...config,
+//   oauth: {
+//     ...config.oauth,
+//     urlOpener: async (url, redirectUrl) => {
+//       const { type, url: newUrl } = await WebBrowser.openAuthSessionAsync(url, redirectUrl);
+//       if (type === 'success') {
+//         await WebBrowser.dismissBrowser();
+//         if (Constants.platform.OS === 'ios') {
+//           return Linking.openURL(newUrl);
+//         }
+//       }
+//     },
+//     options: {
+//       AdvancedSecurityDataCollectionFlag: true,
+//     },
+//   },
+// };
 
-const expoScheme = 'snacksapp://';
-let redirectUrl = Linking.makeUrl();
-if (redirectUrl.startsWith('exp://1')) {
-  redirectUrl = 'exp://127.0.0.1:19000/--/';
-} else
-if (redirectUrl === expoScheme) {
-  // dont do anything
-} else {
-  redirectUrl += '/';
-}
-amplifyConfig.oauth.redirectSignIn = redirectUrl;
-amplifyConfig.oauth.redirectSignOut = redirectUrl;
+// const expoScheme = 'snacksapp://';
+// let redirectUrl = Linking.makeUrl();
+// if (redirectUrl.startsWith('exp://1')) {
+//   redirectUrl += '/--/';
+// } else
+// if (redirectUrl === expoScheme) {
+//   // dont do anything
+// } else {
+//   redirectUrl += '/';
+// }
+// amplifyConfig.oauth.redirectSignIn = redirectUrl;
+// amplifyConfig.oauth.redirectSignOut = redirectUrl;
 
-Amplify.configure(amplifyConfig);
+Amplify.configure(config);
 
 export default function App() {
   return (

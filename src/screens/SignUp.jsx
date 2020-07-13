@@ -15,16 +15,21 @@ export default function SignUp({ navigation }) {
   const theme = useTheme();
 
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [repeatPasswordError, setRepeatPasswordError] = useState(false);
-  const [confirmationCode, setConfirmationCode] = useState('');
-  const [confirmationCodeError, setConfirmationCodeError] = useState(false);
-  const [errorDialog, setErrorDialog] = useState(false);
-  const [errorDialogMsg, setErrorDialogMsg] = useState('');
+  const [userData, setUserData] = useState({
+    givenName: '',
+    email: '',
+    password: '',
+    repeatPassword: '',
+    confirmationCode: '',
+  });
+  const [userDataError, setUserDataError] = useState({
+    givenName: false,
+    email: false,
+    password: false,
+    repeatPassword: false,
+    confirmationCode: false,
+  });
+  const [error, setError] = useState({ show: false, msg: '' });
   const [confirmCodeDialog, setConfirmCodeDialog] = useState(false);
 
   const styles = StyleSheet.create({
@@ -48,6 +53,9 @@ export default function SignUp({ navigation }) {
       fontSize: 36,
       textAlign: 'center',
     },
+    textInput: {
+      marginBottom: 8,
+    },
     button: {
       width: '100%',
       marginBottom: 16,
@@ -57,60 +65,68 @@ export default function SignUp({ navigation }) {
     },
   });
 
-  async function handleSignUp() {
-    if (!email) setEmailError(true);
-    if (!password) setPasswordError(true);
-    if (!repeatPassword) setRepeatPasswordError(true);
-    if (!email || !password || !repeatPassword) return;
-    if (password !== repeatPassword) {
-      setPasswordError(true);
-      setRepeatPasswordError(true);
-      return;
+  function validateSignUp() {
+    let userDataErrorClone = { ...userDataError };
+    Object.keys(userData).forEach((k) => {
+      if ((k !== 'undefined' && k !== 'confirmationCode') && !userData[k]) {
+        userDataErrorClone = { ...userDataErrorClone, [k]: true };
+      }
+    });
+    setUserDataError(userDataErrorClone);
+    if (Object.values(userDataErrorClone).find((d) => d === true)) return false;
+    if (userData.password !== userData.repeatPassword) {
+      setUserDataError({ ...userDataErrorClone, password: true, repeatPassword: true });
+      return false;
     }
+    return true;
+  }
+
+  async function handleSignUp() {
+    if (!validateSignUp()) return;
     try {
       setLoading(true);
       await Auth.signUp({
-        username: email,
-        password,
+        username: userData.email,
+        password: userData.password,
         attributes: {
-          email,
+          email: userData.email,
+          given_name: userData.givenName,
         },
       });
       setLoading(false);
       setConfirmCodeDialog(true);
     } catch (err) {
+      console.log(err);
       setLoading(false);
-      setErrorDialogMsg(err.message);
-      setErrorDialog(true);
+      setError({ show: true, msg: err.message });
     }
   }
 
-  async function signIn() {
-    setLoading(true);
+  async function handleSignIn() {
     try {
-      await Auth.signIn(email, password);
+      setLoading(true);
+      await Auth.signIn(userData.email, userData.password);
+      setLoading(false);
     } catch (err) {
       setLoading(false);
-      setErrorDialogMsg(err.message);
-      setErrorDialog(true);
+      setError({ show: true, msg: err.message });
     }
   }
 
-  async function confirmCode() {
-    if (!confirmationCode) {
-      setConfirmationCodeError(true);
+  async function handleConfirmCode() {
+    if (!userData.confirmationCode) {
+      setUserDataError({ ...userDataError, confirmationCode: true });
       return;
     }
     try {
       setLoading(true);
-      await Auth.confirmSignUp(email, confirmationCode);
-      signIn();
+      await Auth.confirmSignUp(userData.email, userData.confirmationCode);
+      setConfirmCodeDialog(false);
+      setLoading(false);
+      handleSignIn();
     } catch (err) {
-      setErrorDialogMsg(err.message);
-      errorDialog(true);
+      setError({ show: true, msg: err.message });
     }
-    setConfirmCodeDialog(false);
-    setLoading(false);
   }
 
   return (
@@ -122,72 +138,77 @@ export default function SignUp({ navigation }) {
       <Card>
         <Card.Content>
           <TextInput
+            theme={theme}
+            label="Name"
+            value={userData.givenName}
+            onChangeText={(e) => setUserData({ ...userData, givenName: e })}
+            onFocus={() => setUserDataError({ ...userDataError, givenName: false })}
+            error={userDataError.givenName}
+            style={styles.textInput}
+          />
+          <TextInput
+            theme={theme}
             label="Email"
             textContentType="emailAddress"
             keyboardType="email-address"
-            value={email}
-            onChangeText={(e) => setEmail(e)}
-            onFocus={() => setEmailError(false)}
-            error={emailError}
+            value={userData.email}
+            onChangeText={(e) => setUserData({ ...userData, email: e })}
+            onFocus={() => setUserDataError({ ...userDataError, email: false })}
+            error={userDataError.email}
             style={styles.textInput}
-            theme={theme}
           />
           <TextInput
+            theme={theme}
             label="Password"
             secureTextEntry
-            value={password}
-            onChangeText={(p) => setPassword(p)}
-            onFocus={() => setPasswordError(false)}
-            error={passwordError}
+            value={userData.password}
+            onChangeText={(e) => setUserData({ ...userData, password: e })}
+            onFocus={() => setUserDataError({ ...userDataError, password: false })}
+            error={userDataError.password}
             style={styles.textInput}
-            theme={theme}
           />
           <TextInput
+            theme={theme}
             label="Repeat Password"
             secureTextEntry
-            value={repeatPassword}
-            onChangeText={(p) => setRepeatPassword(p)}
-            onFocus={() => setRepeatPasswordError(false)}
-            error={repeatPasswordError}
+            value={userData.repeatPassword}
+            onChangeText={(e) => setUserData({ ...userData, repeatPassword: e })}
+            onFocus={() => setUserDataError({ ...userDataError, repeatPassword: false })}
+            error={userDataError.repeatPassword}
             style={styles.textInput}
-            theme={theme}
           />
         </Card.Content>
         <Card.Actions>
           <Button
-            style={[styles.button, styles.signup]}
             mode="contained"
             onPress={() => handleSignUp()}
             loading={loading}
             disabled={loading}
+            style={[styles.button, styles.signup]}
           >
             Sign Up
           </Button>
         </Card.Actions>
       </Card>
       <Button
-        style={[styles.button]}
         mode="contained"
         onPress={navigation.goBack}
+        disabled={loading}
+        style={[styles.button]}
       >
         Back to Login
       </Button>
-      <ErroDialog
-        theme={theme}
-        visible={errorDialog}
-        show={setErrorDialog}
-        msg={errorDialogMsg}
-      />
+      <ErroDialog theme={theme} data={error} show={setError} />
       <ConfirmCodeDialog
         theme={theme}
         visible={confirmCodeDialog}
         show={setConfirmCodeDialog}
-        code={confirmationCode}
-        setCode={setConfirmationCode}
-        error={confirmationCodeError}
-        setError={setConfirmationCodeError}
+        userData={userData}
+        setUserData={setUserData}
+        userDataError={userDataError}
+        setUserDataError={setUserDataError}
         loading={loading}
-        send={confirmCode}
+        send={handleConfirmCode}
       />
     </KeyboardAvoidingView>
   );

@@ -18,25 +18,34 @@ export default function Login({ navigation }) {
   const theme = useTheme();
 
   const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState('');
-  const [emailError, setEmailError] = useState(false);
-  const [password, setPassword] = useState('');
-  const [passwordError, setPasswordError] = useState(false);
-  const [confirmationCode, setConfirmationCode] = useState('');
-  const [confirmationCodeError, setConfirmationCodeError] = useState(false);
-  const [errorDialog, setErrorDialog] = useState(false);
-  const [errorDialogMsg, setErrorDialogMsg] = useState('');
-  const [sendCodeDialog, setSendCodeDialog] = useState(false);
-  const [sendCodeDialogMsg, setSendCodeDialogMsg] = useState(false);
-  const [confirmCodeDialog, setConfirmCodeDialog] = useState(false);
-  const [forgotPasswordDialog, setForgotPasswordDialog] = useState(false);
-  const [confirmForgotPasswordDialog, setConfirmForgotPasswordDialog] = useState(false);
-  const [codePassword, setCodePassword] = useState('');
-  const [codePasswordError, setCodePasswordError] = useState(false);
-  const [newPassword, setNewPassword] = useState('');
-  const [newPasswordError, setNewPasswordError] = useState(false);
-  const [repeatNewPassword, setRepeatNewPassword] = useState('');
-  const [repeatNewPasswordError, setRepeatNewPasswordError] = useState(false);
+
+  const [userData, setUserData] = useState({
+    email: '',
+    password: '',
+    confirmationCode: '',
+    codeForgotPassword: '',
+    newPassword: '',
+    repeatNewPassword: '',
+  });
+  const [userDataError, setUserDataError] = useState({
+    email: false,
+    password: false,
+    confirmationCode: false,
+    codeForgotPassword: false,
+    newPassword: false,
+    repeatNewPassword: false,
+  });
+  const [error, setError] = useState({
+    show: false,
+    msg: '',
+  });
+  const [sendCode, setSendCode] = useState({
+    show: '',
+    msg: '',
+  });
+  const [confirmCode, setConfirmCode] = useState(false);
+  const [forgotPassword, setForgotPassword] = useState(false);
+  const [confirmForgotPassword, setConfirmForgotPassword] = useState(false);
 
   const styles = StyleSheet.create({
     container: {
@@ -77,97 +86,93 @@ export default function Login({ navigation }) {
     },
   });
 
-  async function signIn() {
-    setLoading(true);
-    if (!email) setEmailError(true);
-    if (!password) setPasswordError(true);
-    if (!email || !password) {
-      setLoading(false);
-      return;
-    }
+  async function handleSignIn() {
+    const { email, password } = userData;
+    console.log(password);
+    if (!email) setUserDataError({ ...userDataError, email: true });
+    if (!password) setUserDataError({ ...userDataError, password: true });
+    if (!email || !password) return;
     try {
+      setLoading(true);
       await Auth.signIn(email, password);
+      setLoading(false);
     } catch (err) {
       setLoading(false);
       if (err.code === 'UserNotConfirmedException') {
-        setSendCodeDialogMsg(err.message);
-        setSendCodeDialog(true);
+        setSendCode({ show: true, msg: err.message });
       } else {
-        setErrorDialogMsg(err.message);
-        setErrorDialog(true);
+        setError({ show: true, msg: err.message });
       }
     }
   }
 
-  async function confirmCode() {
-    if (!confirmationCode) {
-      setConfirmationCodeError(true);
+  async function handleResendSignUp() {
+    try {
+      setLoading(true);
+      await Auth.resendSignUp(userData.email);
+      setLoading(false);
+      setSendCode({ ...sendCode, show: false });
+      setConfirmCode(true);
+    } catch (err) {
+      setLoading(false);
+      setSendCode({ ...sendCode, show: false });
+      setError({ show: true, msg: err.message });
+    }
+  }
+
+  async function handleConfirmSignUp() {
+    const { confirmationCode, email } = userData;
+    if (!confirmationCode) setUserDataError({ ...userDataError, confirmationCode: true });
+    try {
+      setLoading(true);
+      await Auth.confirmSignUp(email, confirmationCode);
+      setConfirmCode(false);
+      setLoading(false);
+      handleSignIn();
+    } catch (err) {
+      setConfirmCode(false);
+      setLoading(false);
+      setError({ show: true, msg: err.message });
+    }
+  }
+
+  async function handleForgotPassword() {
+    try {
+      await Auth.forgotPassword(userData.email);
+      setForgotPassword(false);
+      setLoading(false);
+      setConfirmForgotPassword(true);
+    } catch (err) {
+      setForgotPassword(false);
+      setLoading(false);
+      setError({ show: true, msg: err.message });
+    }
+  }
+
+  async function handleForgotPasswordSubmit() {
+    const {
+      email, codeForgotPassword, newPassword, repeatNewPassword,
+    } = userData;
+    console.log(newPassword);
+    if (!codeForgotPassword) setUserDataError({ ...userDataError, codeForgotPassword: true });
+    if (!newPassword) setUserDataError({ ...userDataError, newPassword: true });
+    if (!repeatNewPassword) setUserDataError({ ...userDataError, repeatNewPassword: true });
+    if (!codeForgotPassword || !newPassword || !repeatNewPassword) return;
+    if (newPassword !== repeatNewPassword) {
+      setUserDataError({ ...userDataError, newPassword: true, repeatNewPassword: true });
       return;
     }
     try {
       setLoading(true);
-      await Auth.confirmSignUp(email, confirmationCode);
-      setConfirmCodeDialog(false);
+      setUserData({ ...userData, password: newPassword });
+      await Auth.forgotPasswordSubmit(email, codeForgotPassword, newPassword);
+      setForgotPassword(false);
       setLoading(false);
-      signIn();
+      handleSignIn();
     } catch (err) {
-      setConfirmCodeDialog(false);
+      setForgotPassword(false);
       setLoading(false);
-      setErrorDialogMsg(err.message);
-      setErrorDialog(true);
-    }
-  }
-
-  async function resendConfirmationCode() {
-    setLoading(true);
-    try {
-      await Auth.resendSignUp(email);
-      setConfirmCodeDialog(true);
-    } catch (err) {
-      setErrorDialogMsg(err.message);
-      setErrorDialog(true);
-    }
-    setSendCodeDialog(false);
-    setLoading(false);
-  }
-
-  async function forgotPassword() {
-    try {
-      await Auth.forgotPassword(email);
-      setForgotPasswordDialog(false);
-      setLoading(false);
-      setConfirmForgotPasswordDialog(true);
-    } catch (err) {
-      setForgotPasswordDialog(false);
-      setLoading(false);
-      setErrorDialogMsg(err.message);
-      setErrorDialog(true);
-    }
-  }
-
-  async function forgotPasswordSubmit() {
-    setLoading(true);
-    if (!codePassword) setCodePasswordError(true);
-    if (!newPassword) setNewPasswordError(true);
-    if (!repeatNewPassword) setRepeatNewPasswordError(true);
-    if (!codePassword || !newPassword || !repeatNewPassword) return;
-    if (newPassword !== repeatNewPassword) {
-      setNewPasswordError(true);
-      setRepeatNewPasswordError(true);
-      return;
-    }
-    try {
-      console.log(email, codePassword, newPassword);
-      await Auth.forgotPasswordSubmit(email, codePassword, newPassword);
-      setPassword(codePassword);
-      setForgotPasswordDialog(false);
-      setLoading(false);
-      signIn();
-    } catch (err) {
-      setForgotPasswordDialog(false);
-      setLoading(false);
-      setErrorDialogMsg(err.message);
-      setErrorDialog(true);
+      setError({ show: true, msg: err.message });
     }
   }
 
@@ -180,127 +185,114 @@ export default function Login({ navigation }) {
       <Card>
         <Card.Content>
           <TextInput
+            theme={theme}
             label="Email"
             textContentType="emailAddress"
             keyboardType="email-address"
-            value={email}
-            onChangeText={(e) => setEmail(e)}
-            onFocus={() => setEmailError(false)}
-            error={emailError}
+            value={userData.email}
+            onChangeText={(e) => setUserData({ ...userData, email: e })}
+            onFocus={() => setUserDataError({ ...userDataError, email: false })}
+            error={userDataError.email}
             style={styles.textInput}
-            theme={theme}
           />
           <TextInput
+            theme={theme}
             label="Password"
             secureTextEntry
-            value={password}
-            onChangeText={(p) => setPassword(p)}
-            onFocus={() => setPasswordError(false)}
-            error={passwordError}
+            value={userData.password}
+            onChangeText={(e) => setUserData({ ...userData, password: e })}
+            onFocus={() => setUserDataError({ ...userDataError, password: false })}
+            error={userDataError.password}
             style={styles.textInput}
-            theme={theme}
           />
         </Card.Content>
         <Card.Actions>
           <Button
-            style={styles.button}
             mode="contained"
-            onPress={() => signIn()}
+            onPress={() => handleSignIn()}
             loading={loading}
             disabled={loading}
+            style={styles.button}
           >
             Sign In
           </Button>
         </Card.Actions>
         <Card.Actions>
-          <TouchableOpacity onPress={() => setForgotPasswordDialog(true)}>
+          <TouchableOpacity onPress={() => setForgotPassword(true)}>
             <Text>Forgot Password?</Text>
           </TouchableOpacity>
         </Card.Actions>
       </Card>
       <View>
         <Button
-          style={[styles.button, styles.facebook]}
           icon="facebook"
           mode="contained"
-          onPress={() => Auth.federatedSignIn({ provider: 'Facebook' })}
+          onPress={() => setError({ show: true, msg: 'To Be Done!' })}
           disabled={loading}
+          style={[styles.button, styles.facebook]}
         >
           Sign In With Facebook
         </Button>
         <Button
-          style={[styles.button, styles.google]}
           icon="google"
           mode="contained"
-          onPress={() => Auth.federatedSignIn({ provider: 'Google' })}
+          onPress={() => setError({ show: true, msg: 'To Be Done!' })}
           disabled={loading}
+          style={[styles.button, styles.google]}
         >
           Sign In With Google
         </Button>
       </View>
       <Button
-        style={[styles.button, styles.signup]}
         icon="account-plus"
         mode="contained"
         onPress={() => navigation.navigate('SignUp')}
         disabled={loading}
+        style={[styles.button, styles.signup]}
       >
         Sign Up
       </Button>
-      <ErroDialog
-        theme={theme}
-        visible={errorDialog}
-        show={setErrorDialog}
-        msg={errorDialogMsg}
-      />
+      <ErroDialog theme={theme} data={error} show={setError} />
       <SendCodeDialog
         theme={theme}
-        visible={sendCodeDialog}
-        show={setSendCodeDialog}
-        msg={sendCodeDialogMsg}
         loading={loading}
-        send={resendConfirmationCode}
+        visible={sendCode.show}
+        show={setSendCode}
+        msg={sendCode.msg}
+        send={handleResendSignUp}
       />
       <ConfirmCodeDialog
         theme={theme}
-        visible={confirmCodeDialog}
-        show={setConfirmCodeDialog}
-        code={confirmationCode}
-        setCode={setConfirmationCode}
-        error={confirmationCodeError}
-        setError={setConfirmationCodeError}
         loading={loading}
-        send={confirmCode}
+        visible={confirmCode}
+        show={setConfirmCode}
+        userData={userData}
+        setUserData={setUserData}
+        userDataError={userDataError}
+        setUserDataError={setUserDataError}
+        send={handleConfirmSignUp}
       />
       <ForgotPasswordDialog
         theme={theme}
-        visible={forgotPasswordDialog}
-        show={setForgotPasswordDialog}
-        email={email}
-        setEmail={setEmail}
-        error={emailError}
-        setError={setEmailError}
         loading={loading}
-        send={forgotPassword}
+        visible={forgotPassword}
+        show={setForgotPassword}
+        userData={userData}
+        setEmail={setUserData}
+        userDataError={userDataError}
+        setError={setUserDataError}
+        send={handleForgotPassword}
       />
       <ConfirmForgotPasswordDialog
         theme={theme}
-        visible={confirmForgotPasswordDialog}
-        show={setConfirmForgotPasswordDialog}
-        codePassword={codePassword}
-        setCodePassword={setCodePassword}
-        codePasswordError={codePasswordError}
-        setCodePasswordError={setCodePasswordError}
-        newPassword={newPassword}
-        setNewPassword={setNewPassword}
-        newPasswordError={newPasswordError}
-        setNewPasswordError={setNewPasswordError}
-        repeatNewPassword={repeatNewPassword}
-        setRepeatNewPassword={setRepeatNewPassword}
-        repeatNewPasswordError={repeatNewPasswordError}
-        setRepeatNewPasswordError={setRepeatNewPasswordError}
         loading={loading}
-        send={forgotPasswordSubmit}
+        visible={confirmForgotPassword}
+        show={setConfirmForgotPassword}
+        userData={userData}
+        setUserData={setUserData}
+        userDataError={userDataError}
+        setError={setUserDataError}
+        send={handleForgotPasswordSubmit}
       />
     </KeyboardAvoidingView>
   );

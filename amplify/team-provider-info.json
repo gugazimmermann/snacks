@@ -1,21 +1,19 @@
 {
     "dev": {
         "awscloudformation": {
-            "AuthRoleName": "amplify-snacksapp-dev-162029-authRole",
-            "UnauthRoleArn": "arn:aws:iam::157095288638:role/amplify-snacksapp-dev-162029-unauthRole",
-            "AuthRoleArn": "arn:aws:iam::157095288638:role/amplify-snacksapp-dev-162029-authRole",
+            "AuthRoleName": "amplify-snacksapp-dev-112617-authRole",
+            "UnauthRoleArn": "arn:aws:iam::157095288638:role/amplify-snacksapp-dev-112617-unauthRole",
+            "AuthRoleArn": "arn:aws:iam::157095288638:role/amplify-snacksapp-dev-112617-authRole",
             "Region": "us-east-2",
-            "DeploymentBucketName": "amplify-snacksapp-dev-162029-deployment",
-            "UnauthRoleName": "amplify-snacksapp-dev-162029-unauthRole",
-            "StackName": "amplify-snacksapp-dev-162029",
-            "StackId": "arn:aws:cloudformation:us-east-2:157095288638:stack/amplify-snacksapp-dev-162029/a21c9eb0-c3ab-11ea-9a88-0a9c3780d6ee",
-            "AmplifyAppId": "d39ngrrtnfqsau"
+            "DeploymentBucketName": "amplify-snacksapp-dev-112617-deployment",
+            "UnauthRoleName": "amplify-snacksapp-dev-112617-unauthRole",
+            "StackName": "amplify-snacksapp-dev-112617",
+            "StackId": "arn:aws:cloudformation:us-east-2:157095288638:stack/amplify-snacksapp-dev-112617/a85a4160-c44b-11ea-9cff-0653eeca5e60",
+            "AmplifyAppId": "d35f5ir5uxi2et"
         },
         "categories": {
             "auth": {
-                "snacksapp06a2fc6a": {
-                    "hostedUIProviderCreds": "[{\"ProviderName\":\"Facebook\",\"client_id\":\"2852637508338852\",\"client_secret\":\"7f799a125e403edc212b87ffa8d7f963\"},{\"ProviderName\":\"Google\",\"client_id\":\"622843482193-6egbfcc0kr233to3n03arl0ckqbkdtjj.apps.googleusercontent.com\",\"client_secret\":\"tTpx88vPqxtyJ88jKFy6DeSo\"}]"
-                }
+                "snacksappf74db237": {}
             }
         }
     }

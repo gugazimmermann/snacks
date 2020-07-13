@@ -4,24 +4,22 @@ import {
 } from 'react-native-paper';
 
 export default function ConfirmCodeDialog({
-  theme, visible, show, code, setCode, error, setError, loading, send,
+  theme, loading, visible, show, userData, setUserData, userDataError, setUserDataError, send,
 }) {
   return (
     <Portal>
       <Dialog visible={visible} close={() => show(false)} theme={theme}>
         <Dialog.Title>Confirmation Code</Dialog.Title>
         <Dialog.Content>
-          <Paragraph style={{ marginTop: 8 }}>
-            Please, check your email and type the code
-          </Paragraph>
+          <Paragraph>Please, check your email and type the code</Paragraph>
           <TextInput
-            error={error}
             theme={theme}
             label="Confirmation Code"
-            value={code}
             keyboardType="numeric"
-            onFocus={() => setError(false)}
-            onChangeText={(e) => setCode(e)}
+            value={userData.confirmationCode}
+            onChangeText={(e) => setUserData({ ...userData, confirmationCode: e })}
+            onFocus={() => setUserDataError({ ...userDataError, confirmationCode: false })}
+            error={userDataError.confirmationCode}
             style={{ marginTop: 8 }}
           />
         </Dialog.Content>

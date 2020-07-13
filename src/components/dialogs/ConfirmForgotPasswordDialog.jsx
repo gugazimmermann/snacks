@@ -4,60 +4,42 @@ import {
 } from 'react-native-paper';
 
 export default function ConfirmForgotPasswordDialog({
-  theme,
-  visible,
-  show,
-  codePassword,
-  setCodePassword,
-  codePasswordError,
-  setCodePasswordError,
-  newPassword,
-  setNewPassword,
-  newPasswordError,
-  setNewPasswordError,
-  repeatNewPassword,
-  setRepeatNewPassword,
-  repeatNewPasswordError,
-  setRepeatNewPasswordError,
-  loading,
-  send,
+  theme, loading, visible, show, userData, setUserData, userDataError, setError, send,
 }) {
   return (
     <Portal>
       <Dialog visible={visible} close={() => show(false)} theme={theme}>
         <Dialog.Title>New Password</Dialog.Title>
         <Dialog.Content>
-          <Paragraph style={{ marginTop: 8 }}>
-            Please, check your email and then type the code  and new password
-          </Paragraph>
+          <Paragraph>Please, check your email and then type the code  and new password</Paragraph>
           <TextInput
-            error={codePasswordError}
             theme={theme}
             label="Confirmation Code"
-            value={codePassword}
             keyboardType="numeric"
-            onFocus={() => setCodePasswordError(false)}
-            onChangeText={(e) => setCodePassword(e)}
+            value={userData.codeForgotPassword}
+            onChangeText={(e) => setUserData({ ...userData, codeForgotPassword: e })}
+            onFocus={() => setError({ ...userDataError, codeForgotPassword: false })}
+            error={userDataError.codeForgotPassword}
             style={{ marginTop: 8 }}
           />
           <TextInput
-            error={newPasswordError}
             theme={theme}
             label="New Password"
-            value={newPassword}
             secureTextEntry
-            onFocus={() => setNewPasswordError(false)}
-            onChangeText={(p) => setNewPassword(p)}
+            value={userData.newPassword}
+            onChangeText={(e) => setUserData({ ...userData, newPassword: e })}
+            onFocus={() => setError({ ...userDataError, newPassword: false })}
+            error={userDataError.newPassword}
             style={{ marginTop: 8 }}
           />
           <TextInput
-            error={repeatNewPasswordError}
             theme={theme}
             label="Repeat New Password"
-            value={repeatNewPassword}
             secureTextEntry
-            onFocus={() => setRepeatNewPasswordError(false)}
-            onChangeText={(p) => setRepeatNewPassword(p)}
+            value={userData.repeatNewPassword}
+            onChangeText={(e) => setUserData({ ...userData, repeatNewPassword: e })}
+            onFocus={() => setError({ ...userDataError, repeatNewPassword: false })}
+            error={userDataError.repeatNewPassword}
             style={{ marginTop: 8 }}
           />
         </Dialog.Content>

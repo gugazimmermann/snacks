@@ -1,6 +1,6 @@
 {
 	"auth": {
-		"snacksapp06a2fc6a": {
+		"snacksappf74db237": {
 			"service": "Cognito",
 			"providerPlugin": "awscloudformation",
 			"dependsOn": []

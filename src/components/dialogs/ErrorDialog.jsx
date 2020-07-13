@@ -1,27 +1,20 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
 import {
   Button, Paragraph, Dialog, Portal,
 } from 'react-native-paper';
 
 export default function ErroDialog({
-  theme, visible, show, msg,
+  theme, data, show,
 }) {
-  const styles = StyleSheet.create({
-    title: {
-      color: theme.colors.error,
-    },
-  });
-
   return (
     <Portal>
-      <Dialog visible={visible} onDismiss={() => show(false)} theme={theme}>
-        <Dialog.Title style={styles.title}>Error</Dialog.Title>
+      <Dialog visible={data.show} onDismiss={() => show({ show: false })} theme={theme}>
+        <Dialog.Title style={{ color: theme.colors.error }}>Error</Dialog.Title>
         <Dialog.Content>
-          <Paragraph>{msg}</Paragraph>
+          <Paragraph>{data.msg}</Paragraph>
         </Dialog.Content>
         <Dialog.Actions>
-          <Button onPress={() => show(false)}>Ok</Button>
+          <Button onPress={() => show({ show: false })}>Ok</Button>
         </Dialog.Actions>
       </Dialog>
     </Portal>

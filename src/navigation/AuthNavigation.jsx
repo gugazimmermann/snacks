@@ -4,11 +4,11 @@ import Header from '../components/Header';
 import Login from '../screens/Login';
 import SignUp from '../screens/SignUp';
 
-const Stack = createStackNavigator();
+const { Navigator, Screen } = createStackNavigator();
 
 export default function AuthNavigation() {
   return (
-    <Stack.Navigator
+    <Navigator
       initialRouteName="Login"
       screenOptions={{
         header: ({ scene, previous, navigation }) => (
@@ -16,8 +16,8 @@ export default function AuthNavigation() {
         ),
       }}
     >
-      <Stack.Screen name="Login" component={Login} options={{ headerShown: false }} />
-      <Stack.Screen name="SignUp" component={SignUp} options={{ title: 'Sign Up', headerStyle: { marginTop: 0 } }} />
-    </Stack.Navigator>
+      <Screen name="Login" component={Login} options={{ headerShown: false }} />
+      <Screen name="SignUp" component={SignUp} options={{ title: 'Sign Up', headerStyle: { marginTop: 0 } }} />
+    </Navigator>
   );
 }

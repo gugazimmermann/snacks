@@ -1,8 +1,8 @@
 {
-    "identityPoolName": "snacksapp06a2fc6a_identitypool_06a2fc6a",
+    "identityPoolName": "snacksappf74db237_identitypool_f74db237",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "snacks06a2fc6a",
-    "userPoolName": "snacksapp06a2fc6a_userpool_06a2fc6a",
+    "resourceNameTruncated": "snacksf74db237",
+    "userPoolName": "snacksappf74db237_userpool_f74db237",
     "autoVerifiedAttributes": [
         "email"
     ],
@@ -19,7 +19,7 @@
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
         "email",
-        "name"
+        "given_name"
     ],
     "userpoolClientGenerateSecret": true,
     "userpoolClientRefreshTokenValidity": 30,
@@ -29,10 +29,10 @@
     "userpoolClientReadAttributes": [
         "email"
     ],
-    "userpoolClientLambdaRole": "snacks06a2fc6a_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "snacksf74db237_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "06a2fc6a",
-    "resourceName": "snacksapp06a2fc6a",
+    "sharedId": "f74db237",
+    "resourceName": "snacksappf74db237",
     "authSelections": "identityPoolAndUserPool",
     "authRoleArn": {
         "Fn::GetAtt": [
@@ -46,19 +46,11 @@
             "Arn"
         ]
     },
-    "useDefault": "defaultSocial",
-    "hostedUI": true,
+    "useDefault": "default",
     "usernameAttributes": [
         "email"
     ],
     "triggers": "{}",
-    "hostedUIDomainName": "snacks",
-    "authProvidersUserPool": [
-        "Facebook",
-        "Google"
-    ],
-    "hostedUIProviderMeta": "[{\"ProviderName\":\"Facebook\",\"authorize_scopes\":\"email,public_profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"id\"}},{\"ProviderName\":\"Google\",\"authorize_scopes\":\"openid email profile\",\"AttributeMapping\":{\"email\":\"email\",\"name\":\"name\",\"username\":\"sub\"}}]",
-    "oAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"exp://127.0.0.1:19000/--/\",\"snacksapp://\"],\"LogoutURLs\":[\"exp://127.0.0.1:19000/--/\",\"snacksapp://\"]}",
     "userPoolGroupList": [],
     "parentStack": {
         "Ref": "AWS::StackId"
