@@ -2,9 +2,9 @@
 import 'react-native-gesture-handler';
 import React from 'react';
 import Amplify from 'aws-amplify';
-import * as Linking from 'expo-linking';
-import * as WebBrowser from 'expo-web-browser';
-import Constants from 'expo-constants';
+// import * as Linking from 'expo-linking';
+// import * as WebBrowser from 'expo-web-browser';
+// import Constants from 'expo-constants';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { AppearanceProvider } from 'react-native-appearance';
 import MainNavigation from './navigation/MainNavigation';

@@ -1,18 +1,17 @@
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import constants from 'expo-constants';
 import {
   useTheme, Text, Card, TextInput, Button,
 } from 'react-native-paper';
-import {
-  KeyboardAvoidingView, StyleSheet, Image, View,
-} from 'react-native';
+import { KeyboardAvoidingView, Image, View } from 'react-native';
+import getStyles from '../styles/signup';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
 import logo from '../../assets/icon.png';
 
 export default function SignUp({ navigation }) {
   const theme = useTheme();
+  const styles = getStyles(theme);
 
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
@@ -31,39 +30,6 @@ export default function SignUp({ navigation }) {
   });
   const [error, setError] = useState({ show: false, msg: '' });
   const [confirmSignUp, setConfirmSignUp] = useState(false);
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      backgroundColor: theme.colors.background,
-      padding: 8,
-      paddingBottom: 24,
-    },
-    logo: {
-      alignSelf: 'center',
-      height: 192 / 2,
-      width: 192 / 2,
-      marginTop: constants.statusBarHeight,
-    },
-    title: {
-      ...theme.fonts.medium,
-      color: theme.colors.primary,
-      fontSize: 36,
-      textAlign: 'center',
-    },
-    textInput: {
-      marginBottom: 8,
-    },
-    button: {
-      width: '100%',
-      marginBottom: 16,
-    },
-    signup: {
-      backgroundColor: theme.colors.accent,
-    },
-  });
 
   function validateSignUp() {
     let userDataErrorClone = { ...userDataError };

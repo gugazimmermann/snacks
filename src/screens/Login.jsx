@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
 import { Auth } from 'aws-amplify';
-import constants from 'expo-constants';
 import {
-  useTheme, Colors, Card, TextInput, Button, Text,
+  useTheme, Card, TextInput, Button, Text,
 } from 'react-native-paper';
 import {
-  KeyboardAvoidingView, StyleSheet, Image, View, TouchableOpacity,
+  KeyboardAvoidingView, Image, View, TouchableOpacity,
 } from 'react-native';
+import getStyles from '../styles/login';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import ResendSignUp from '../components/dialogs/ResendSignUp';
 import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
@@ -16,6 +16,7 @@ import logo from '../../assets/icon.png';
 
 export default function Login({ navigation }) {
   const theme = useTheme();
+  const styles = getStyles(theme);
 
   const [loading, setLoading] = useState(false);
   const [userData, setUserData] = useState({
@@ -45,45 +46,6 @@ export default function Login({ navigation }) {
   const [confirmSignUp, setConfirmSignUp] = useState(false);
   const [forgotPassword, setForgotPassword] = useState(false);
   const [confirmForgotPassword, setConfirmForgotPassword] = useState(false);
-
-  const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      flexDirection: 'column',
-      justifyContent: 'space-between',
-      backgroundColor: theme.colors.background,
-      padding: 8,
-      paddingBottom: 24,
-    },
-    logo: {
-      alignSelf: 'center',
-      height: 192 / 2,
-      width: 192 / 2,
-      marginTop: constants.statusBarHeight,
-    },
-    title: {
-      ...theme.fonts.medium,
-      color: theme.colors.primary,
-      fontSize: 36,
-      textAlign: 'center',
-    },
-    textInput: {
-      marginBottom: 8,
-    },
-    button: {
-      width: '100%',
-      marginBottom: 16,
-    },
-    facebook: {
-      backgroundColor: Colors.blue800,
-    },
-    google: {
-      backgroundColor: Colors.red800,
-    },
-    signup: {
-      backgroundColor: theme.colors.accent,
-    },
-  });
 
   async function handleSignIn() {
     const { email, password } = userData;
@@ -174,7 +136,7 @@ export default function Login({ navigation }) {
       }
     });
     setUserDataError(userDataErrorClone);
-    console.log(userData.newPassword, userData.repeatNewPassword)
+    console.log(userData.newPassword, userData.repeatNewPassword);
     if (Object.values(userDataErrorClone).find((d) => d === true)) return false;
     if (userData.newPassword !== userData.repeatNewPassword) {
       setUserDataError({ ...userDataErrorClone, newPassword: true, repeatNewPassword: true });
