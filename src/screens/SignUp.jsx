@@ -4,7 +4,7 @@ import {
   useTheme, Text, Card, TextInput, Button,
 } from 'react-native-paper';
 import { KeyboardAvoidingView, Image, View } from 'react-native';
-import getStyles from '../styles/signup';
+import getStyles from '../styles/signUp';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
 import logo from '../../assets/icon.png';
@@ -162,7 +162,7 @@ export default function SignUp({ navigation }) {
         disabled={loading}
         style={[styles.button]}
       >
-        Back to Login
+        Back to Sign In
       </Button>
       <ConfirmSignUpDialog
         theme={theme}

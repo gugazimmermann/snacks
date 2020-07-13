@@ -1,10 +1,12 @@
 /* eslint-disable no-nested-ternary */
 import React from 'react';
-import { StyleSheet, TouchableOpacity } from 'react-native';
+import { TouchableOpacity } from 'react-native';
 import { useTheme, Appbar, Avatar } from 'react-native-paper';
+import getStyles from '../styles/header';
 
 export default function Header({ scene, previous, navigation }) {
   const theme = useTheme();
+  const styles = getStyles(theme);
 
   const { options } = scene.descriptor;
   const title = options.headerTitle !== undefined
@@ -13,19 +15,11 @@ export default function Header({ scene, previous, navigation }) {
       ? options.title
       : scene.route.name;
 
-  const styles = StyleSheet.create({
-    header: {
-
-    },
-    avatar: {
-      marginLeft: 16,
-    },
-  });
   return (
     <Appbar.Header
+      theme={theme}
       statusBarHeight={0}
       style={styles.header}
-      theme={{ colors: { primary: theme.colors.primary } }}
     >
       {previous ? (
         <Appbar.BackAction

@@ -6,7 +6,7 @@ import {
 import {
   KeyboardAvoidingView, Image, View, TouchableOpacity,
 } from 'react-native';
-import getStyles from '../styles/login';
+import getStyles from '../styles/signIn';
 import ErroDialog from '../components/dialogs/ErrorDialog';
 import ResendSignUp from '../components/dialogs/ResendSignUp';
 import ConfirmSignUpDialog from '../components/dialogs/ConfirmSignUpDialog';
@@ -14,7 +14,7 @@ import ForgotPasswordDialog from '../components/dialogs/ForgotPasswordDialog';
 import ConfirmForgotPasswordDialog from '../components/dialogs/ConfirmForgotPasswordDialog';
 import logo from '../../assets/icon.png';
 
-export default function Login({ navigation }) {
+export default function SignIn({ navigation }) {
   const theme = useTheme();
   const styles = getStyles(theme);
 
