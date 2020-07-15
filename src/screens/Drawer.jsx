@@ -1,5 +1,5 @@
 /* eslint-disable react/destructuring-assignment */
-import React from 'react';
+import React, { useContext } from 'react';
 import { Auth } from 'aws-amplify';
 import { View, StyleSheet } from 'react-native';
 import {
@@ -20,10 +20,12 @@ import {
   Portal,
 } from 'react-native-paper';
 import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { AuthContext } from '../context/AuthContext';
 
 const DrawerScreen = (props) => {
   const theme = useTheme();
-
+  const [state, dispatch] = useContext(AuthContext);
+  const user = state.user.attributes;
   const [visible, setVisible] = React.useState(false);
   const [errMsg, setErrMsg] = React.useState('');
   const showDialog = () => setVisible(true);
@@ -97,8 +99,8 @@ const DrawerScreen = (props) => {
               }}
               size={50}
             />
-            <Title style={styles.title}>Guga Zimmermann</Title>
-            <Caption style={styles.caption}>@gugazimmermann</Caption>
+            <Title style={styles.title}>{user.given_name}</Title>
+            <Caption style={styles.caption}>{user.email}</Caption>
             <View style={styles.row}>
               <View style={styles.section}>
                 <Paragraph style={[styles.paragraph, styles.caption]}>

@@ -15,9 +15,10 @@ import {
   Ubuntu_300Light_Italic,
   Ubuntu_400Regular,
   Ubuntu_500Medium,
+  Ubuntu_700Bold,
 } from '@expo-google-fonts/ubuntu';
 import AsyncStorage from '@react-native-community/async-storage';
-import { currentAuthenticatedUser } from '../api/auth';
+import { currentUserInfo } from '../api/auth';
 import mainTheme from '../styles/mainTheme';
 import { AuthContext } from '../context/AuthContext';
 
@@ -70,11 +71,12 @@ export default function MainNavigation() {
     Ubuntu_300Light_Italic,
     Ubuntu_400Regular,
     Ubuntu_500Medium,
+    Ubuntu_700Bold,
   });
 
   async function checkAuth() {
     try {
-      const currentUser = await currentAuthenticatedUser();
+      const currentUser = await currentUserInfo();
       dispatch({ type: 'LOGIN', payload: currentUser });
     } catch (err) {
       dispatch({ type: 'LOGOUT' });

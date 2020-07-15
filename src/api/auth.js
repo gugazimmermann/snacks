@@ -1,6 +1,6 @@
 import { Auth } from 'aws-amplify';
 
-export const currentAuthenticatedUser = () => Auth.currentAuthenticatedUser();
+export const currentUserInfo = () => Auth.currentUserInfo();
 
 export const signIn = (e, p) => Auth.signIn(e, p);
 
