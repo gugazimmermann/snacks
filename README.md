@@ -6,6 +6,4 @@ this one was just to organize the stacks and tabs, the dark mode and RTL to tran
 
 ## EXPO
 
-open with the QR Code
-
-![QR CODE](./qr_code.png)
+https://expo.io/@gugazimmermann/snackspoc
